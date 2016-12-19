@@ -1,0 +1,17 @@
+.sub_menuitem_container {
+  position: absolute;
+  top: -62px;
+  visibility: hidden;
+}
+.sub_menu_item {
+  border: 1px solid gainsboro;
+  color: gray;
+  line-height: 50px;
+  position: relative;
+  text-align: center;
+  height: 50px;
+  display: block;
+}
+.sub_menuitem_container_visible {
+  visibility: visible;
+}

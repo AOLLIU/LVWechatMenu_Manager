@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>卓术微信公众号后台管理平台</title>
+    <link rel="stylesheet" href="../css/managerPage.css">
+</head>
+
+<body >
+
+<div class="pageContainer" id="app">
+    <!--标题-->
+    <div class="managerPageHeader">卓术微信公众号后台管理平台</div>
+
+    <!--内容-->
+    <div class="managerPageBody">
+
+        <!--左边的界面-->
+        <div class="displayInterface">
+            <div class="displayInterfaceTitle">{{userName}}</div>
+
+            <!--主菜单-->
+            <div class="displayInterfaceBg">
+                <ul class="pre_menu_list" id="menuList">
+                    <li class="pre_menu_item menu_item_active" @click="addmenuitemClick" id="firstliofpremenuItem">
+                        <a class="pre_menu_link">
+                            <i class="icon14_menu_add" id="addImage"></i>
+                            <span class="js_addMenuTips js_addMenuTips_active" id="addmenuTips_green">添加菜单</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <!--子菜单-->
+            <div class="sub_menuitem_container sub_menuitem_container_visible ">
+                <ul class="sub_menuitem_list" id="sub_menuitem_list">
+                    <li class="sub_menu_item" onclick="addSubmenuitemClick()" id="submenuinitial">
+                        <a class="pre_menu_link">
+                            <i class="icon14_menu_add"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+
+        <!--右边的界面-->
+        <div class="portable_editor">
+            <!--头部-->
+            <div class="portable_header">
+                <span class="portable_header_left">菜单名称</span>
+                <span class="portable_header_right" @click="deletemenuitemClick">删除菜单</span>
+            </div>
+
+            <div class="muneNameDiv">
+                <label class="commentLabel">菜单名称</label>
+                <input type="text" class="commentInput" id="name"
+                       placeholder="菜单名称" v-model="menuItemName">
+                <div class="muneTipDiv">字数不超过4个汉字或8个字母</div>
+            </div>
+
+            <!--中间-->
+            <div class="muneContentDiv">
+                <label class="muneContentTitle">菜单内容</label>
+                <div class="start-radio">
+                    <input type="radio" value="1" class="radio" name="seletType" checked="true" @change="selectMessageOrUrl('message')">
+                    <div class="radioChose">发送消息</div>
+                </div>
+                <div class="close-radio">
+                    <input type="radio" value="0" class="radio" name="seletType" @change="selectMessageOrUrl('url')">
+                    <div class="radioChose">跳转网页</div>
+                </div>
+            </div>
+
+            <!--内容-->
+
+            <!--1.发送消息-->
+            <div class="concreteInnerMessageDiv">
+                <!--1.1标题-->
+                <div class="concreteInnerMessageTitleDiv">
+                    <span class="concreteInnerMessageTitle">消息</span>
+                </div>
+
+                <!--1.2消息内容-->
+                <div class="concreteInnerMessageContent" @click="alertPickerContentPage">
+                    <div>
+                        <img src="../source/Snip20161212_9.png" class="PickerContentImage">
+                    </div>
+                    <a class="PickerContentButton">从素材库中选择</a>
+                </div>
+            </div>
+
+
+            <!--2网页-->
+            <div class="concreteInnerURLDiv" style="display: none">
+                <!--2.1标题-->
+                <div class="concreteInnerURLTitle">订阅者点击该子菜单会跳到以下链接</div>
+                <!--2.2连接-->
+                <div class="concreteInnerURLContent">
+                    <label class="commentLabel">网页地址</label>
+                    <input type="text" class="commentInput" placeholder="请输入要跳转的地址">
+                </div>
+            </div>
+
+        </div>
+
+        <!--底部按钮-->
+        <div class="bottomBtnDiv" @click="saveAndPublishBtnClick">
+            <a class="saveAndPublishBtn" @click="">保存并发布</a>
+        </div>
+
+    </div>
+
+    <!--尾部-->
+    <!--<div class="managerPageFooter">-->
+    <!--by卓术-->
+    <!--</div>-->
+
+
+
+
+</div>
+
+<script src="../third/jquery.min.js"></script>
+<script src="../third/vue.min.js"></script>
+<script src="../js/alertWindow.js"></script>
+<script>
+
+    $(function () {
+    });
+
+    //菜单选中
+    function becomeActive(currentLi) {
+
+        //去除子菜单的选中状态
+//        $(".menu_item_active").removeClass("menu_item_active")
+
+        //去掉sub_menuitem_container的显示状态,默认是隐藏的,这里去掉这个class就是恢复成默认
+        $(".sub_menuitem_container").removeClass("sub_menuitem_container_visible")
+
+        //去除之前的选中的菜单的样式和状态
+        $(".menu_item_active").removeClass("menu_item_active")
+        $(".activeState").removeClass("activeState")
+
+        //添加新选中样式和状态
+        $(currentLi).addClass("menu_item_active")
+        $(currentLi).addClass("activeState")
+
+        //切换菜单时显示对应的子菜单并去掉子菜单的选中样式
+        $(".activeState").find(".sub_menuitem_container").addClass("sub_menuitem_container_visible")
+
+
+        //右边框和保存按钮显示
+        $(".portable_editor").css("visibility","visible")
+        $(".saveAndPublishBtn").css("visibility","visible")
+    }
+
+
+    //子菜单选中状态
+    function submenuitembecomeActive(currentSubItemli) {
+        $(".menu_item_active").removeClass("menu_item_active")
+        $(currentSubItemli).addClass("menu_item_active")
+    }
+
+
+    //添加子菜单
+    function addSubmenuitemClick() {
+
+        //添加子菜单时取出主菜单的选中样式,但是主菜单的选中状态还在
+//        $(".activeState").addClass("pre_menu_item_normal")
+
+        $(".menu_item_active").removeClass("menu_item_active")
+
+        var allLis = $(".activeState").find(".sub_menuitem_container").find("ul").children("li")
+
+        liCount = allLis.length
+
+        var submenuli = '<li class="sub_menu_item menu_item_active" onclick="submenuitembecomeActive(this)"><a class="pre_menu_link"><span class="js_addMenuTips">子菜单名称</span></a></a></li>'
+        $(submenuli).insertBefore(allLis[0]);
+
+        //修改子菜单的位置
+        if(liCount == 1){
+            $(".activeState").find(".sub_menuitem_container").css("top","-114px")
+        }else if (liCount == 2){
+            $(".activeState").find(".sub_menuitem_container").css("top","-166px")
+        }else if (liCount == 3){
+            $(".activeState").find(".sub_menuitem_container").css("top","-218px")
+        }else if (liCount == 4){
+            $(".activeState").find(".sub_menuitem_container").css("top","-270px")
+        }else if (liCount == 5){
+            $(".activeState").find(".sub_menuitem_container").css("height","260px")
+            $(".activeState").find(".sub_menuitem_container").css("overflow","hidden")
+        }
+    }
+
+    var appData = {
+        userName:"",
+        menuItemName:""
+    };
+
+    var appFunc = {
+        //添加菜单
+        addmenuitemClick:function () {
+
+            //去除子菜单的选中状态
+//            $(".menu_item_active").removeClass("menu_item_active")
+
+            //隐藏所有的子菜单容器
+//            $(".sub_menuitem_container").removeClass("sub_menuitem_container_visible")
+
+            var allLis = $("#menuList").children("li")
+
+            //去除之前的菜单的选中状态和样式
+//            $("#menuList").children("li").each(function(){
+//                $(this).removeClass("menu_item_active")
+//            });
+            $(".activeState").removeClass("activeState")
+
+
+            liCount = allLis.length
+            if (liCount < 4) {
+                var newli = '<li class="pre_menu_item menu_item_active activeState " onclick="becomeActive(this)"><a class="pre_menu_link"><span class="js_addMenuTips">菜单名称</span></a></li>'
+
+                $(".portable_editor").css("visibility","visible")
+                $(".saveAndPublishBtn").css("visibility","visible")
+                $(newli).insertBefore(allLis[liCount - 1]);
+
+
+                //修改li的宽度
+                if(liCount < 3){
+                    $("#menuList").children("li").each(function () {
+                        $(this).width((274 - (2 * (liCount + 1))) / (liCount + 1))
+                    });
+//                    $(".sub_menuitem_container").width((274 - (2 * (liCount + 1))) / (liCount + 1))
+                }else {
+                    $("#menuList").children("li").each(function () {
+                        $(this).width((274 - (2 * (2 + 1))) / (2 + 1))
+                    });
+//                    $(".sub_menuitem_container").width((274 - (2 * (2 + 1))) / (2 + 1))
+
+//                    $('#firstliofpremenuItem').hide()
+                }
+            }
+        },
+
+        //删除菜单
+        deletemenuitemClick:function () {
+            myAlertWindow.initial("温馨提示","删除后该菜单下设置的所有内容将被删除")
+            myAlertWindow.conformBtnClick(function () {
+
+                $(".activeState").remove()
+
+
+                $(".portable_editor").css("visibility","hidden")
+                $(".saveAndPublishBtn").css("visibility","hidden")
+
+                var allLis = $("#menuList").children("li")
+                liCount = allLis.length
+                $('#firstliofpremenuItem').show()
+                if(liCount < 3){
+                    $("#menuList").children("li").each(function () {
+                        $(this).width((274 - (2 * (liCount))) / (liCount))
+                    });
+                    $(".sub_menuitem_container").width((274 - (2 * (liCount))) / (liCount))
+
+                }else {
+                    $("#menuList").children("li").each(function () {
+                        $(this).width((274 - (2 * (2 + 1))) / (2 + 1))
+                    });
+                    $(".sub_menuitem_container").width((274 - (2 * (2 + 1))) / (2 + 1))
+                }
+            })
+        },
+
+        //切换发送消息还是跳转url
+        selectMessageOrUrl:function (e) {
+            if (e == "message"){
+                $(".concreteInnerMessageDiv").show()
+                $(".concreteInnerURLDiv").hide()
+            }else {
+                $(".concreteInnerMessageDiv").hide()
+                $(".concreteInnerURLDiv").show()
+            }
+        },
+
+        //选择图文消息
+        alertPickerContentPage:function () {
+            alert("弹框")
+        },
+
+        //点击保存
+        saveAndPublishBtnClick:function () {
+            alert("保存设置")
+        }
+    };
+
+    var appVue = new Vue({
+        el: "#app",
+        data: appData,
+        methods: {
+            addmenuitemClick:appFunc.addmenuitemClick,
+            deletemenuitemClick:appFunc.deletemenuitemClick,
+            selectMessageOrUrl:appFunc.selectMessageOrUrl,
+            alertPickerContentPage:appFunc.alertPickerContentPage,
+            saveAndPublishBtnClick:appFunc.saveAndPublishBtnClick,
+            addSubmenuitemClick:appFunc.addSubmenuitemClick,
+        },
+        mounted:function () {
+            getUserName()
+        }
+    });
+
+    function getUserName() {
+//        $(".displayInterfaceTitle").append("AOLIU的每一天")
+        appData.userName = "AOLIU的每一天"
+    }
+
+
+</script>
+</body>
+</html>
