@@ -68,12 +68,8 @@
                         </ul>
                     </div>
 
-
-
                 </div>
         </div>
-
-
 
         <!--右边的界面-->
         <div class="portable_editor">
@@ -85,7 +81,7 @@
 
             <div class="muneNameDiv">
                 <label class="commentLabel">菜单名称</label>
-                <input type="text" class="commentInput" id="name" id="commentInput" value="">
+                <input type="text" class="commentInput" id="commentInput" value="" @change="muneNameChanged" v-model="muneDetailInfo.name">
                 <div class="muneTipDiv">字数不超过4个汉字或8个字母</div>
             </div>
 
@@ -128,7 +124,7 @@
                 <!--2.2连接-->
                 <div class="concreteInnerURLContent">
                     <label class="concreteInnerURLLabel">网页地址</label>
-                    <input type="text" class="concreteInnerURLInput" placeholder="请输入要跳转的地址">
+                    <input type="text" class="concreteInnerURLInput" placeholder="请输入要跳转的地址" v-model="muneDetailInfo.url" @change="muneJumpUrlChanged">
                 </div>
             </div>
 
@@ -162,6 +158,8 @@
     var appData = {
         userName:"",
         mainMenuList:[],
+        muneDetailInfo:{},//菜单名称
+        currentMenu:[],
     };
 
     //1.添加主菜单
@@ -190,6 +188,15 @@
         $(".perSub_menu_container").removeClass("subMenu_container_visible")
         var b = $(".allSub_menuitem_container").children("li")[index]
         $(b).addClass("subMenu_container_visible")
+
+        var a = 0;
+        $( ".perSub_menu_container" ).each(function(index) {
+            if ($(this).is($(".subMenu_container_visible"))){
+                a = index
+            }
+        });
+
+        appData.muneDetailInfo = appData.mainMenuList[a]
     }
 
     //4.添加子菜单
@@ -266,6 +273,11 @@
         var c = $(b[a]).find("ul")
         var d = $(c).find("li")[ind]
         $(d).addClass("menu_item_active")
+
+        appData.muneDetailInfo = appData.mainMenuList[a].sub_button[ind]
+        console.log(appData.muneDetailInfo)
+        console.log(appData.mainMenuList)
+
     }
 
     var appFunc = {
@@ -334,7 +346,51 @@
         //点击保存
         saveAndPublishBtnClick:function () {
             alert("保存设置")
+        },
+
+        //修改菜单名称
+        muneNameChanged:function () {
+
+            //1.找出当前自菜单是在第几个主菜单下
+            var a = 0;
+            $( ".perSub_menu_container" ).each(function(index) {
+                if ($(this).is($(".subMenu_container_visible"))){
+                    a = index
+                }
+            });
+
+            //2.所有的子菜单
+            var b =  $(".allSub_menuitem_container").children("li")
+            var c = $(b[a]).find("ul")
+            var d = $(c).find("li")
+
+            var e = 999;
+            for(var i = 0; i < d.length; i++){
+                if ($(d[i]).is($(".menu_item_active"))){
+                    e = i;
+                }
+            }
+
+            if (e === 999){
+                if(appData.muneDetailInfo.name == ""){
+                    alert("菜单名不能为空")
+                }else {
+                    appData.mainMenuList[a] = appData.muneDetailInfo;
+                }
+            }else {
+                if(appData.muneDetailInfo.name == ""){
+                    alert("菜单名不能为空")
+                }else {
+                    appData.mainMenuList[a].sub_button[i] = appData.muneDetailInfo;
+                }
+            }
+        },
+
+        //修改调整的url
+        muneJumpUrlChanged:function () {
+
         }
+
     };
 
     var appVue = new Vue({
@@ -347,6 +403,9 @@
             selectMessageOrUrl:appFunc.selectMessageOrUrl,
             alertPickerContentPage:appFunc.alertPickerContentPage,
             saveAndPublishBtnClick:appFunc.saveAndPublishBtnClick,
+
+            muneNameChanged:appFunc.muneNameChanged,
+            muneJumpUrlChanged:appFunc.muneJumpUrlChanged,
         },
         mounted:function () {
             getInitialData();
@@ -392,24 +451,14 @@
                                "key": "V1001_GOOD",
                                "sub_button": [ ]
                            },
-                           {
-                               "type": "view",
-                               "name": "视频",
-                               "url": "http://v.qq.com/",
-                               "sub_button": [ ]
-                           },
-                           {
-                               "type": "click",
-                               "name": "赞一下我们",
-                               "key": "V1001_GOOD",
-                               "sub_button": [ ]
-                           }
                        ]
                    }
                ]
            }
        }
         appData.mainMenuList = menu.menu.button;
+
+        appData.muneDetailInfo = appData.mainMenuList[0]
         setTimeout(initialMenu,0)
 
     }
@@ -442,7 +491,6 @@
             $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
             $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
         }
-
         changeSubMenuPosition()
     }
 
@@ -545,7 +593,7 @@
             var newmenuName = $(this).val();
 
             if (newmenuName.length == 0){
-//                $(".menu_item_active").find(".js_addMenuTips").first().text("")
+                $(".menu_item_active").find(".js_addMenuTips").first().text("")
             }else {
                 $(".menu_item_active").find(".js_addMenuTips").first().text(newmenuName)
             }
