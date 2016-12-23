@@ -52,12 +52,12 @@
                         <ul class="allSub_menuitem_container">
                             <li class="perSub_menu_container" v-for="(d,index) in mainMenuList" >
                                 <ul class="sub_menu_list">
-                                    <li class="sub_menu_item" v-for="c in d.sub_button">
+                                    <li class="sub_menu_item" v-for="(c,index) in d.sub_button" @click="changeSubFocusClick(index)">
                                         <a class="pre_subMenu_link">
                                             <span class="menu_item_detail">{{c.name}}</span>
                                         </a>
                                     </li>
-                                    <li class="sub_menu_item">
+                                    <li class="sub_menu_item" @click="addSubMenuItemClick" id="add_subMenu_btn">
                                         <a class="pre_subMenu_link">
                                             <i class="icon14_menu_add"></i>
                                         </a>
@@ -175,7 +175,7 @@
         }
 
         appData.mainMenuList.push(menu)
-        changeMenuWidth()
+        setTimeout(changeMenuWidth,0)
 
         $(".portable_editor").css("visibility","visible")
     }
@@ -193,7 +193,80 @@
     }
 
     //4.添加子菜单
+    function addSubMenuItemClick() {
 
+        $(".portable_editor").css("visibility","hidden")
+        //1.找出当前是在第几个主菜单下
+        var a = 0;
+        $( ".perSub_menu_container" ).each(function(index) {
+            if ($(this).is($(".subMenu_container_visible"))){
+                 a = index
+            }
+        });
+
+        //2.在主菜单下的sub_button数组属性下添加数据
+        var subMenu = {
+            "type": "view",
+            "name": "我是子菜单",
+            "url": "http://www.soso.com/",
+            "sub_button": []
+        }
+
+        if(appData.mainMenuList[a].sub_button.length >= 5){
+            alert("子菜单最多添加5个")
+        }else {
+            appData.mainMenuList[a].sub_button.push(subMenu)
+        }
+
+        //3.去除原来菜单的选中状态
+        $(".menu_item_active").removeClass("menu_item_active")
+
+        //4.添加新添加的子菜单的选中状态(暂时没做)
+
+        setTimeout(changeSubMenuPosition,0)
+//        setTimeout(changeSubMenuStyleFunc(a),0)
+
+    }
+    /*
+     function changeSubMenuStyleFunc(a) {
+        var b =  $(".allSub_menuitem_container").children("li")
+        var c = $(b[a]).find("ul")
+        var d = $(c).find("li")
+
+        var count = d.length;
+
+        if(count == 1){
+            $(".sub_menu_item:eq(1)").addClass("menu_item_active")
+        }else if(count == 2){
+            $(".sub_menu_item:eq(2)").addClass("menu_item_active")
+        }else if (count == 3){
+            $(".sub_menu_item:eq(3)").addClass("menu_item_active")
+        }else if(count == 4){
+            $(".sub_menu_item:eq(4)").addClass("menu_item_active")
+        }else if(count == 5){
+            $(".sub_menu_item:eq(5)").addClass("menu_item_active")
+        }
+    }
+*/
+    //5.切换焦点
+    function changeSubFocusClick(ind) {
+        $(".portable_editor").css("visibility","visible")
+        //1.找出当前自菜单是在第几个主菜单下
+        var a = 0;
+        $( ".perSub_menu_container" ).each(function(index) {
+            if ($(this).is($(".subMenu_container_visible"))){
+                a = index
+            }
+        });
+
+        //2.所有的子菜单
+        var b =  $(".allSub_menuitem_container").children("li")
+
+        $(".menu_item_active").removeClass("menu_item_active")
+        var c = $(b[a]).find("ul")
+        var d = $(c).find("li")[ind]
+        $(d).addClass("menu_item_active")
+    }
 
     var appFunc = {
 
@@ -206,7 +279,7 @@
             //点击了确认按钮
             myAlertWindow.conformBtnClick(function () {
 
-
+                //一.如果是主菜单情况下
                 $( ".pre_menu_item" ).each(function(index) {
                     if ($(this).is($(".menu_item_active"))){
                         var a = index
@@ -216,8 +289,29 @@
                     }
                 });
 
+                //如果是子菜单情况下
+                //1.找出当前是在第几个主菜单下
+                var a = 0;
+                $( ".perSub_menu_container" ).each(function(index) {
+                    if ($(this).is($(".subMenu_container_visible"))){
+                        a = index
+                    }
+                });
+                //2.找出是第几个
+                var b =  $(".allSub_menuitem_container").children("li")
+                var c = $(b[a]).find("ul")
+                var d = $(c).find("li")
+
+                for(var i = 0; i < d.length; i++){
+                    if ($(d[i]).is($(".menu_item_active"))){
+                        appData.mainMenuList[a].sub_button.splice(i,1)
+                        $(".menu_item_active").removeClass("menu_item_active")
+                    }
+                }
+
                 $(".portable_editor").css("visibility","hidden")
-                deleteMenuChangeMenuWidth()
+                setTimeout(deleteMenuChangeMenuWidth,0)
+
             })
         },
 
@@ -297,6 +391,18 @@
                                "name": "赞一下我们",
                                "key": "V1001_GOOD",
                                "sub_button": [ ]
+                           },
+                           {
+                               "type": "view",
+                               "name": "视频",
+                               "url": "http://v.qq.com/",
+                               "sub_button": [ ]
+                           },
+                           {
+                               "type": "click",
+                               "name": "赞一下我们",
+                               "key": "V1001_GOOD",
+                               "sub_button": [ ]
                            }
                        ]
                    }
@@ -304,42 +410,40 @@
            }
        }
         appData.mainMenuList = menu.menu.button;
-        initialMenu()
+        setTimeout(initialMenu,0)
+
     }
 
     //初始化menu样式
     function initialMenu() {
-        setTimeout(function () {
-            //计算当前主菜单有多少个li
-            //注意:
-            //1.只有1个li时,没有子菜单
-            //2.有2个li时,有1个子菜单,宽度是2个主菜单时主菜单的宽度
-            //3.有3个li时,有2个子菜单,宽度是3个主菜单时主菜单的宽度
-            //4.有4个li时,有3个子菜单,宽度是3个主菜单时主菜单的宽度
+        //计算当前主菜单有多少个li
+        //注意:
+        //1.只有1个li时,没有子菜单
+        //2.有2个li时,有1个子菜单,宽度是2个主菜单时主菜单的宽度
+        //3.有3个li时,有2个子菜单,宽度是3个主菜单时主菜单的宽度
+        //4.有4个li时,有3个子菜单,宽度是3个主菜单时主菜单的宽度
 
-            var listCount = $(".pre_menu_list").children("li").length
-            var itemTotalWidth = $('.pre_menu_list').width()
-            $(".pre_menu_list li:first").addClass("menu_item_active")
-            $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
+        var listCount = $(".pre_menu_list").children("li").length
+        var itemTotalWidth = $('.pre_menu_list').width()
+        $(".pre_menu_list li:first").addClass("menu_item_active")
+        $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
 
-            $(".portable_editor").css("visibility","visible")
+        $(".portable_editor").css("visibility","visible")
 
-            if (listCount < 4){
-                if (listCount == 1){
-                    $(".portable_editor").css("visibility","hidden")
-                    $(".perSub_menu_container").width(0)
-                }
-                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
-
-            }else if (listCount >= 4){
-                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        if (listCount < 4){
+            if (listCount == 1){
+                $(".portable_editor").css("visibility","hidden")
+                $(".perSub_menu_container").width(0)
             }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
 
-            changeSubMenuPosition()
+        }else if (listCount >= 4){
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
 
-        },0)
+        changeSubMenuPosition()
     }
 
     //调整子菜单的布局
@@ -356,88 +460,82 @@
             var c = $(b).find("li");
             var d = $(".sub_menu_list")[i];
             $(d).height(c.length * 50);
+
             for (var j =0;j<c.length;j++){
                 $(c[j]).css("bottom", (c.length - j - 1) * 50 + "px");
             }
         }
-
     }
-    
+
     //添加menu调整menu的宽度
     function changeMenuWidth() {
+        //计算当前有多少个li
+        var listCount = $(".pre_menu_list").children("li").length
+        var itemTotalWidth = $('.pre_menu_list').width()
 
-        setTimeout(function () {
-            //计算当前有多少个li
-            var listCount = $(".pre_menu_list").children("li").length
-            var itemTotalWidth = $('.pre_menu_list').width()
+        if (listCount < 4){
+            if(listCount == 1){
+                $("#add_menu_item").addClass("menu_item_active")
+            }else {
 
-            if (listCount < 4){
-                if(listCount == 1){
-                   $("#add_menu_item").addClass("menu_item_active")
-                }else {
+                $("#add_menu_item").removeClass("menu_item_active")
+                if(listCount == 2){
+                    $(".pre_menu_list li:eq(0)").addClass("menu_item_active")
 
-                    $("#add_menu_item").removeClass("menu_item_active")
-                    if(listCount == 2){
-                        $(".pre_menu_list li:eq(0)").addClass("menu_item_active")
-
-                        var p = $(".allSub_menuitem_container").children("li")[0]
-                        $(p).addClass("subMenu_container_visible")
+                    var p = $(".allSub_menuitem_container").children("li")[0]
+                    $(p).addClass("subMenu_container_visible")
 
 
-                    }else if (listCount == 3){
-                        $(".pre_menu_list li:eq(0)").removeClass("menu_item_active")
-                        $(".pre_menu_list li:eq(1)").addClass("menu_item_active")
+                }else if (listCount == 3){
+                    $(".pre_menu_list li:eq(0)").removeClass("menu_item_active")
+                    $(".pre_menu_list li:eq(1)").addClass("menu_item_active")
 
-                        var q = $(".allSub_menuitem_container").children("li")[0]
-                        $(q).removeClass("subMenu_container_visible")
-                        var r = $(".allSub_menuitem_container").children("li")[1]
-                        $(r).addClass("subMenu_container_visible")
+                    var q = $(".allSub_menuitem_container").children("li")[0]
+                    $(q).removeClass("subMenu_container_visible")
+                    var r = $(".allSub_menuitem_container").children("li")[1]
+                    $(r).addClass("subMenu_container_visible")
 
-                    }
                 }
-                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
-            }else if (listCount >= 4){
-                if (listCount == 4){
-                    $(".pre_menu_list li:eq(1)").removeClass("menu_item_active")
-                    $(".pre_menu_list li:eq(2)").addClass("menu_item_active")
-
-                    var s = $(".allSub_menuitem_container").children("li")[1]
-                    $(s).removeClass("subMenu_container_visible")
-                    var t = $(".allSub_menuitem_container").children("li")[2]
-                    $(t).addClass("subMenu_container_visible")
-                }
-                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
             }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        }else if (listCount >= 4){
+            if (listCount == 4){
+                $(".pre_menu_list li:eq(1)").removeClass("menu_item_active")
+                $(".pre_menu_list li:eq(2)").addClass("menu_item_active")
 
-            changeSubMenuPosition()
-        },0)
+                var s = $(".allSub_menuitem_container").children("li")[1]
+                $(s).removeClass("subMenu_container_visible")
+                var t = $(".allSub_menuitem_container").children("li")[2]
+                $(t).addClass("subMenu_container_visible")
+            }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
+
+        changeSubMenuPosition()
     }
 
     //删除menu调整menu的宽度
     function deleteMenuChangeMenuWidth() {
+        //计算当前有多少个li
+        var listCount = $(".pre_menu_list").children("li").length
+        var itemTotalWidth = $('.pre_menu_list').width()
 
-        setTimeout(function () {
-            //计算当前有多少个li
-            var listCount = $(".pre_menu_list").children("li").length
-            var itemTotalWidth = $('.pre_menu_list').width()
-
-            if (listCount < 4){
-                if(listCount == 1){
-                    $("#add_menu_item").addClass("menu_item_active")
-                    $(".perSub_menu_container").width(0)
-                }
-                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
-            }else if (listCount >= 4){
-                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        if (listCount < 4){
+            if(listCount == 1){
+                $("#add_menu_item").addClass("menu_item_active")
+                $(".perSub_menu_container").width(0)
             }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        }else if (listCount >= 4){
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
 
-            changeSubMenuPosition()
+        changeSubMenuPosition()
 
-        },0)
     }
 
     //监听右侧输入框文字的改变
@@ -454,8 +552,7 @@
         });
 
     }
-    
-    
+
 
 </script>
 </body>
