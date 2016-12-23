@@ -82,7 +82,8 @@
             <div class="muneNameDiv">
                 <label class="commentLabel">菜单名称</label>
                 <input type="text" class="commentInput" id="commentInput" value="" @change="muneNameChanged" v-model="muneDetailInfo.name">
-                <div class="muneTipDiv">字数不超过4个汉字或8个字母</div>
+                <div class="muneTipDiv">主菜单字数不超过4个汉字或8个字母</div>
+                <div class="muneTipDiv">子菜单字数不超过8个汉字或16个字母</div>
             </div>
 
             <!--中间-->
@@ -176,12 +177,14 @@
         setTimeout(changeMenuWidth,0)
 
         $(".portable_editor").css("visibility","visible")
+        $(".saveAndPublishBtn").css("visibility","visible")
     }
 
     //2.切换焦点
     function changeFocusClick(index) {
 //        changeMenuWidth()
         $(".portable_editor").css("visibility","visible")
+        $(".saveAndPublishBtn").css("visibility","visible")
         $(".menu_item_active").removeClass("menu_item_active")
         var a = $(".pre_menu_list").children("li")[index]
         $(a).addClass("menu_item_active")
@@ -189,33 +192,24 @@
         var b = $(".allSub_menuitem_container").children("li")[index]
         $(b).addClass("subMenu_container_visible")
 
-        var a = 0;
-        $( ".perSub_menu_container" ).each(function(index) {
-            if ($(this).is($(".subMenu_container_visible"))){
-                a = index
-            }
-        });
+        var c = findCurrentMenu()
 
-        appData.muneDetailInfo = appData.mainMenuList[a]
+        appData.muneDetailInfo = appData.mainMenuList[c[0]]
     }
 
     //4.添加子菜单
     function addSubMenuItemClick() {
 
         $(".portable_editor").css("visibility","hidden")
+        $(".saveAndPublishBtn").css("visibility","hidden")
         //1.找出当前是在第几个主菜单下
-        var a = 0;
-        $( ".perSub_menu_container" ).each(function(index) {
-            if ($(this).is($(".subMenu_container_visible"))){
-                 a = index
-            }
-        });
+        var a = findCurrentMenu()[0]
 
         //2.在主菜单下的sub_button数组属性下添加数据
         var subMenu = {
             "type": "view",
-            "name": "我是子菜单",
-            "url": "http://www.soso.com/",
+            "name": "子菜单名称",
+            "url": "",
             "sub_button": []
         }
 
@@ -258,13 +252,8 @@
     //5.切换焦点
     function changeSubFocusClick(ind) {
         $(".portable_editor").css("visibility","visible")
-        //1.找出当前自菜单是在第几个主菜单下
-        var a = 0;
-        $( ".perSub_menu_container" ).each(function(index) {
-            if ($(this).is($(".subMenu_container_visible"))){
-                a = index
-            }
-        });
+        $(".saveAndPublishBtn").css("visibility","visible")
+        var a = findCurrentMenu()[0]
 
         //2.所有的子菜单
         var b =  $(".allSub_menuitem_container").children("li")
@@ -300,12 +289,7 @@
 
                 //如果是子菜单情况下
                 //1.找出当前是在第几个主菜单下
-                var a = 0;
-                $( ".perSub_menu_container" ).each(function(index) {
-                    if ($(this).is($(".subMenu_container_visible"))){
-                        a = index
-                    }
-                });
+                var a = findCurrentMenu()[0]
                 //2.找出是第几个
                 var b =  $(".allSub_menuitem_container").children("li")
                 var c = $(b[a]).find("ul")
@@ -319,6 +303,7 @@
                 }
 
                 $(".portable_editor").css("visibility","hidden")
+                $(".saveAndPublishBtn").css("visibility","hidden")
                 setTimeout(deleteMenuChangeMenuWidth,0)
 
             })
@@ -343,42 +328,25 @@
         //点击保存
         saveAndPublishBtnClick:function () {
             alert("保存设置")
+            alert(appData.mainMenuList)
+            console.log(appData.mainMenuList)
         },
 
         //修改菜单名称
         muneNameChanged:function () {
 
-            //1.找出当前自菜单是在第几个主菜单下
-            var a = 0;
-            $( ".perSub_menu_container" ).each(function(index) {
-                if ($(this).is($(".subMenu_container_visible"))){
-                    a = index
-                }
-            });
-
-            //2.所有的子菜单
-            var b =  $(".allSub_menuitem_container").children("li")
-            var c = $(b[a]).find("ul")
-            var d = $(c).find("li")
-
-            var e = 999;
-            for(var i = 0; i < d.length; i++){
-                if ($(d[i]).is($(".menu_item_active"))){
-                    e = i;
-                }
-            }
-
-            if (e === 999){
+            var c = findCurrentMenu();
+            if (c[1] === 999){
                 if(appData.muneDetailInfo.name == ""){
                     alert("菜单名不能为空")
                 }else {
-                    appData.mainMenuList[a].name = appData.muneDetailInfo.name;
+                    appData.mainMenuList[c[0]].name = appData.muneDetailInfo.name;
                 }
             }else {
                 if(appData.muneDetailInfo.name == ""){
                     alert("菜单名不能为空")
                 }else {
-                    appData.mainMenuList[a].sub_button[i].name = appData.muneDetailInfo.name;
+                    appData.mainMenuList[c[0]].sub_button[c[1]].name = appData.muneDetailInfo.name;
                 }
             }
         },
@@ -386,9 +354,45 @@
         //修改调整的url
         muneJumpUrlChanged:function () {
 
+            var c = findCurrentMenu();
+
+            if (c[1] === 999){
+                if(appData.muneDetailInfo.url != ""){
+                    appData.mainMenuList[c[0]].url = appData.muneDetailInfo.url;
+                }
+            }else {
+                if(appData.muneDetailInfo.name != ""){
+                    appData.mainMenuList[c[0]].sub_button[c[1]].url = appData.muneDetailInfo.url;
+                }
+            }
         }
 
     };
+
+    //找到当前选中的是第几个菜单
+    function findCurrentMenu() {
+        //1.找出当前自菜单是在第几个主菜单下
+        var a = 0;
+        $( ".perSub_menu_container" ).each(function(index) {
+            if ($(this).is($(".subMenu_container_visible"))){
+                a = index
+            }
+        });
+
+        //2.所有的子菜单
+        var b =  $(".allSub_menuitem_container").children("li")
+        var c = $(b[a]).find("ul")
+        var d = $(c).find("li")
+
+        var e = 999;
+        for(var i = 0; i < d.length; i++){
+            if ($(d[i]).is($(".menu_item_active"))){
+                e = i;
+            }
+        }
+
+        return [a,e]
+    }
 
     var appVue = new Vue({
         el: "#app",
@@ -475,10 +479,12 @@
         $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
 
         $(".portable_editor").css("visibility","visible")
+        $(".saveAndPublishBtn").css("visibility","visible")
 
         if (listCount < 4){
             if (listCount == 1){
                 $(".portable_editor").css("visibility","hidden")
+                $(".saveAndPublishBtn").css("visibility","hidden")
                 $(".perSub_menu_container").width(0)
             }
             $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
