@@ -24,10 +24,9 @@
       <file leaf-file-name="managerPage.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/html/managerPage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="278" column="40" lean-forward="false" selection-start-line="278" selection-start-column="40" selection-end-line="278" selection-end-column="40" />
+            <state relative-caret-position="-1108">
+              <caret line="276" column="72" lean-forward="false" selection-start-line="276" selection-start-column="72" selection-end-line="276" selection-end-column="72" />
               <folding>
-                <element signature="n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#div#4;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="e#7115#8000#0" expanded="false" />
@@ -35,23 +34,13 @@
                 <element signature="e#7657#7699#0" expanded="false" />
                 <element signature="e#7704#7776#0" expanded="false" />
                 <element signature="e#8005#8711#0" expanded="false" />
-                <element signature="e#11189#11471#0" expanded="false" />
-                <element signature="e#11534#11569#0" expanded="false" />
-                <element signature="e#11630#11667#0" expanded="false" />
-                <element signature="e#16490#17021#0" expanded="false" />
-                <element signature="e#17076#19095#0" expanded="false" />
-                <element signature="e#19160#19911#0" expanded="false" />
+                <element signature="e#11102#11384#0" expanded="false" />
+                <element signature="e#11447#11482#0" expanded="false" />
+                <element signature="e#11543#11580#0" expanded="false" />
+                <element signature="e#16423#16954#0" expanded="false" />
+                <element signature="e#17009#19028#0" expanded="false" />
+                <element signature="e#19093#19844#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="portable_editor.less" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/css/portable_editor.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="45" column="9" lean-forward="false" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="9" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -68,7 +57,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>displayInterFaceSubMenuContainer</find>
       <find>pre_menu_list</find>
       <find>sub_menu_item</find>
       <find>j</find>
@@ -98,6 +86,7 @@
       <find>init</find>
       <find>$(b[a]).find(&quot;ul&quot;)</find>
       <find>muneDetailInfo</find>
+      <find>appData.muneDetailInfo</find>
     </findStrings>
     <replaceStrings>
       <replace>activeState</replace>
@@ -352,12 +341,12 @@
       <workItem from="1482368924614" duration="17549000" />
       <workItem from="1482394707166" duration="4373000" />
       <workItem from="1482404019643" duration="4677000" />
-      <workItem from="1482459359262" duration="17181000" />
+      <workItem from="1482459359262" duration="17974000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="177062000" />
+    <option name="totallyTimeSpent" value="177855000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="23" width="1232" height="729" extended-state="0" />
@@ -419,10 +408,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/html/managerPage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="278" column="40" lean-forward="false" selection-start-line="278" selection-start-column="40" selection-end-line="278" selection-end-column="40" />
+        <state relative-caret-position="-1108">
+          <caret line="276" column="72" lean-forward="false" selection-start-line="276" selection-start-column="72" selection-end-line="276" selection-end-column="72" />
           <folding>
-            <element signature="n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#div#4;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
             <element signature="e#7115#8000#0" expanded="false" />
@@ -430,12 +418,12 @@
             <element signature="e#7657#7699#0" expanded="false" />
             <element signature="e#7704#7776#0" expanded="false" />
             <element signature="e#8005#8711#0" expanded="false" />
-            <element signature="e#11189#11471#0" expanded="false" />
-            <element signature="e#11534#11569#0" expanded="false" />
-            <element signature="e#11630#11667#0" expanded="false" />
-            <element signature="e#16490#17021#0" expanded="false" />
-            <element signature="e#17076#19095#0" expanded="false" />
-            <element signature="e#19160#19911#0" expanded="false" />
+            <element signature="e#11102#11384#0" expanded="false" />
+            <element signature="e#11447#11482#0" expanded="false" />
+            <element signature="e#11543#11580#0" expanded="false" />
+            <element signature="e#16423#16954#0" expanded="false" />
+            <element signature="e#17009#19028#0" expanded="false" />
+            <element signature="e#19093#19844#0" expanded="false" />
           </folding>
         </state>
       </provider>

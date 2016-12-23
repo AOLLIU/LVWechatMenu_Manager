@@ -275,9 +275,6 @@
         $(d).addClass("menu_item_active")
 
         appData.muneDetailInfo = appData.mainMenuList[a].sub_button[ind]
-        console.log(appData.muneDetailInfo)
-        console.log(appData.mainMenuList)
-
     }
 
     var appFunc = {
@@ -375,13 +372,13 @@
                 if(appData.muneDetailInfo.name == ""){
                     alert("菜单名不能为空")
                 }else {
-                    appData.mainMenuList[a] = appData.muneDetailInfo;
+                    appData.mainMenuList[a].name = appData.muneDetailInfo.name;
                 }
             }else {
                 if(appData.muneDetailInfo.name == ""){
                     alert("菜单名不能为空")
                 }else {
-                    appData.mainMenuList[a].sub_button[i] = appData.muneDetailInfo;
+                    appData.mainMenuList[a].sub_button[i].name = appData.muneDetailInfo.name;
                 }
             }
         },
