@@ -148,25 +148,49 @@ a,
 a:hover {
   color: #333;
 }
-.sub_menuitem_container {
+.containerDiv {
   position: absolute;
-  top: -62px;
+  bottom: 62px;
+  overflow: hidden;
+  width: 274px;
+}
+.allSub_menuitem_container {
+  position: relative;
+  width: 274px;
+  height: 202px;
+}
+.perSub_menu_container {
+  color: black;
+  text-align: center;
+  float: left;
+  border: 1px solid gainsboro;
+  position: absolute;
+  bottom: 0px;
   visibility: hidden;
 }
 .sub_menu_item {
-  border: 1px solid gainsboro;
+  width: 100%;
+  border-top: 1px solid gainsboro;
   color: gray;
-  line-height: 50px;
-  position: relative;
+  line-height: 49px;
+  position: absolute;
   text-align: center;
-  height: 50px;
+  height: 49px;
   display: block;
+  bottom: 0px;
 }
-.sub_menuitem_container_visible {
+.sub_menu_list {
+  position: relative;
+}
+.subMenu_container_visible {
   visibility: visible;
 }
+* {
+  margin: 0;
+  padding: 0;
+}
 .displayInterface {
-  border: 1px solid #e7e7eb;
+  border: 1px solid #dfdfdf;
   width: 317px;
   height: 580px;
   float: left;
@@ -197,44 +221,26 @@ a:hover {
   background-position: 0 0;
   background-repeat: no-repeat;
   padding-left: 43px;
-  height: 52px;
+  height: 50px;
 }
 .pre_menu_list {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-left: 43px;
-  height: 52px;
+  overflow: hidden;
+  height: 50px;
+  width: 274px;
 }
 .pre_menu_item {
   border: 1px solid gainsboro;
   color: black;
-  line-height: 50px;
   position: relative;
   text-align: center;
-  display: inline-block;
-  height: 50px;
-  width: 272px;
-}
-.menu_item_active {
-  border: 1px solid #44b549;
-}
-.menu_item_active > a > span {
-  color: #44b549;
-}
-.count-1 {
-  width: 272px;
-}
-.count-2 {
-  width: 135px;
-}
-.count-3 {
-  width: 89.33px;
+  float: left;
+  height: 48px;
+  line-height: 48px;
 }
 .pre_menu_link {
   display: block;
   width: auto;
+  height: 48px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -247,10 +253,16 @@ a:hover {
   background-position: 0 0;
   background-repeat: no-repeat;
   padding-left: 20px;
-  height: 52px;
+  height: 48px;
 }
-.js_addMenuTips {
+.menu_item_detail {
   font-size: 14px;
+}
+.menu_item_active {
+  border: 1px solid #44b549;
+}
+.menu_item_active > a > span {
+  color: #44b549;
 }
 /* colors */
 /* font size */

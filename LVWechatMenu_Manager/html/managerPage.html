@@ -18,18 +18,62 @@
         <!--左边的界面-->
         <div class="displayInterface">
             <div class="displayInterfaceTitle">{{userName}}</div>
-            <div class="displayInterfaceBg">
-                <ul class="pre_menu_list" id="menuList">
-                    <li class="pre_menu_item menu_item_active" @click="addmenuitemClick" id="firstliofpremenuItem">
-                        <a class="pre_menu_link">
-                            <i class="icon14_menu_add" id="addImage"></i>
-                            <span class="js_addMenuTips js_addMenuTips_active" id="addmenuTips_green">添加菜单</span>
-                        </a>
-                    </li>
-                </ul>
 
-            </div>
+                <div class="displayInterfaceBg">
+                    <!--主菜单-->
+                    <ul class="pre_menu_list" >
+
+                        <li class="pre_menu_item" v-for="(d,index) in mainMenuList"  @click="changeFocusClick(index)">
+                            <a class="pre_menu_link">
+                                <span class="menu_item_detail">{{d.name}}</span>
+                            </a>
+                        </li>
+                        <li class="pre_menu_item" @click="addMenuItemLiClick" id="add_menu_item">
+                            <a class="pre_menu_link">
+                                <i class="icon14_menu_add"></i>
+                                <span class="menu_item_detail">添加菜单</span>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <!--子菜单-->
+                    <!--
+                    思路:
+                    1.所有的子菜单都在一个allSub_menuitem_container的ul中
+                    2.根据主菜单有几个来创建多少个perSub_menu_container,就是每个主菜单对应的子菜单容器,多个子菜单容器通过主菜单的切换来控制器隐藏还是现实
+                    3.然后再根据每个主菜单对应子菜单数据的个数,决定子菜单的个数
+                    4.添加子菜单,首先判断是在哪个主菜单的下,然后添加逻辑和主菜单一样
+                    5.删除子菜单,同4
+                    6.主菜单和子菜单直接的切换,通过去除之前的选中状态,给当前选中的添加选中状态来实现
+                    -->
+
+                    <div class="containerDiv">
+                        <ul class="allSub_menuitem_container">
+                            <li class="perSub_menu_container" v-for="(d,index) in mainMenuList" >
+                                <ul class="sub_menu_list">
+                                    <li class="sub_menu_item" v-for="c in d.sub_button">
+                                        <a class="pre_subMenu_link">
+                                            <span class="menu_item_detail">{{c.name}}</span>
+                                        </a>
+                                    </li>
+                                    <li class="sub_menu_item">
+                                        <a class="pre_subMenu_link">
+                                            <i class="icon14_menu_add"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
         </div>
+
+
 
         <!--右边的界面-->
         <div class="portable_editor">
@@ -98,26 +142,9 @@
     </div>
 
     <!--尾部-->
-    <!--<div class="managerPageFooter">-->
-    <!--byAOLLIU-->
-    <!--</div>-->
-
-
-    <!--<div class="modal fade" id="removePostModal" aria-hidden="true">-->
-    <!--<div class="modal-dialog" style="width: 400px; margin-top: 200px;">-->
-    <!--<div class="modal-content">-->
-    <!--<div class="modal-header">移帖至</div>-->
-    <!--<div class="modal-body" style="text-align: center">-->
-    <!--<select  id="removePostSelect" class="form-control" name="removePost" style="width: 150px;display: inline-block">-->
-    <!--</select>-->
-    <!--</div>-->
-    <!--<div class="modal-footer">-->
-    <!--<button class="btn btn-default" id="removePostButton">确定</button>-->
-    <!--<button class="btn btn-primary" data-dismiss="modal">取消</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
+    <div class="managerPageFooter">
+        byAOLLIU
+    </div>
 
 
 </div>
@@ -127,156 +154,50 @@
 <script src="../js/alertWindow.js"></script>
 <script>
 
-    //因为设计的时候使用了嵌套dom,内外dom都有点击事件,为了防止内部dom点击事件冒泡至外部dom触发点击事件,所以定义一个开关用来判断是否执行了点击子菜单,0代表没有执行,1代表执行了
-    var a = 0;//处理添加逻辑
 
     $(function () {
 
     });
 
-
-    //修改右边编辑框中Input文字为当前选中菜单的名字,和删除按钮文字
-    function changePortableText(deleteLabelStr,muneTipDivStr) {
-
-        var dd = $(".menu_item_active").find(".js_addMenuTips").first().text()
-        $(".portable_header_right").text(deleteLabelStr)
-        $(".muneTipDiv").text(muneTipDivStr)
-        $(".commentLabel").text(dd)
-        $(".commentInput").val(dd)
-    }
-
-    //菜单选中
-    function becomeActive(currentLi) {
-
-        if (a != 1){
-
-            //去掉sub_menuitem_container的显示状态,默认是隐藏的,这里去掉这个class就是恢复成默认
-            $(".sub_menuitem_container").removeClass("sub_menuitem_container_visible")
-
-            //去除之前的选中的菜单的样式和状态
-            $(".menu_item_active").removeClass("menu_item_active")
-            $(".activeState").removeClass("activeState")
-
-            //添加新选中样式和状态
-            $(currentLi).addClass("menu_item_active")
-            $(currentLi).addClass("activeState")
-
-            //切换菜单时显示对应的子菜单并去掉子菜单的选中样式
-            $(".activeState").find(".sub_menuitem_container").addClass("sub_menuitem_container_visible")
-
-
-            //右边框和保存按钮显示
-            $(".portable_editor").css("visibility","visible")
-            $(".saveAndPublishBtn").css("visibility","visible")
-
-            changePortableText("删除菜单","字数不超过4个汉字或8个字母")
-        }
-
-        //重置开关
-        a = 0;
-    }
-
-    //子菜单选中状态
-    function submenuitembecomeActive(currentSubItemli) {
-
-        //修改开关状态
-        a = 1;
-        $(".menu_item_active").removeClass("menu_item_active")
-        $(currentSubItemli).addClass("menu_item_active")
-        
-        //右边框和保存按钮显示
-        $(".portable_editor").css("visibility","visible")
-        $(".saveAndPublishBtn").css("visibility","visible")
-
-        changePortableText("删除子菜单","字数不超过8个汉字或16个字母")
-    }
-
-    //添加子菜单
-    function addSubmenuitemClick() {
-
-        //修改开关状态来
-        a = 1;
-
-        //显示右边的编辑界面和保存按钮
-        $(".portable_editor").css("visibility","visible")
-        $(".saveAndPublishBtn").css("visibility","visible")
-
-        $(".menu_item_active").removeClass("menu_item_active")
-
-        var allLis = $(".activeState").find(".sub_menuitem_container").find("ul").children("li")
-
-        liCount = allLis.length
-
-        var submenuli = '<li class="sub_menu_item menu_item_active" onclick="submenuitembecomeActive(this)"><a class="pre_menu_link"><span class="js_addMenuTips">子菜单名称</span></a></a></li>'
-        $(submenuli).insertBefore(allLis[0]);
-
-
-        //修改右边编辑框中Input文字为当前选中主菜单的名字
-        changePortableText("删除子菜单","字数不超过8个汉字或16个字母")
-
-        //修改子菜单的位置
-        if(liCount == 1){
-            $(".activeState").find(".sub_menuitem_container").css("top","-114px")
-        }else if (liCount == 2){
-            $(".activeState").find(".sub_menuitem_container").css("top","-166px")
-        }else if (liCount == 3){
-            $(".activeState").find(".sub_menuitem_container").css("top","-218px")
-        }else if (liCount == 4){
-            $(".activeState").find(".sub_menuitem_container").css("top","-270px")
-        }else if (liCount == 5){
-            $(".activeState").find(".sub_menuitem_container").css("height","260px")
-            $(".activeState").find(".sub_menuitem_container").css("overflow","hidden")
-        }
-    }
-
     var appData = {
         userName:"",
+        mainMenuList:[],
     };
 
+    //1.添加主菜单
+    function addMenuItemLiClick() {
+
+        var menu = {
+            "type": "click",
+            "name": "菜单名称",
+            "key": "V1001_TODAY_MUSIC",
+            "sub_button": [ ]
+        }
+
+        appData.mainMenuList.push(menu)
+        changeMenuWidth()
+
+        $(".portable_editor").css("visibility","visible")
+    }
+
+    //2.切换焦点
+    function changeFocusClick(index) {
+//        changeMenuWidth()
+        $(".portable_editor").css("visibility","visible")
+        $(".menu_item_active").removeClass("menu_item_active")
+        var a = $(".pre_menu_list").children("li")[index]
+        $(a).addClass("menu_item_active")
+        $(".perSub_menu_container").removeClass("subMenu_container_visible")
+        var b = $(".allSub_menuitem_container").children("li")[index]
+        $(b).addClass("subMenu_container_visible")
+    }
+
+    //4.添加子菜单
+
+
     var appFunc = {
-        //添加菜单
-        addmenuitemClick:function () {
 
-            //去除选中状态
-            $(".menu_item_active").removeClass("menu_item_active")
-
-            //隐藏所有的子菜单容器
-            $(".sub_menuitem_container").removeClass("sub_menuitem_container_visible")
-
-            var allLis = $("#menuList").children("li")
-
-            $(".activeState").removeClass("activeState")
-
-            liCount = allLis.length
-            if (liCount < 4) {
-                var newli = '<li class="pre_menu_item menu_item_active activeState" onclick="becomeActive(this)"><a class="pre_menu_link"><span class="js_addMenuTips">菜单名称</span></a><div class="sub_menuitem_container sub_menuitem_container_visible "><ul class="sub_menuitem_list" id="sub_menuitem_list"><li class="sub_menu_item" onclick="addSubmenuitemClick()" id="submenuinitial"><a class="pre_menu_link"><i class="icon14_menu_add"></i></a></li></ul></div></li>'
-
-                //显示右边的编辑界面和保存按钮
-                $(".portable_editor").css("visibility","visible")
-                $(".saveAndPublishBtn").css("visibility","visible")
-
-                $(newli).insertBefore(allLis[liCount - 1]);
-
-                changePortableText("删除菜单","字数不超过4个汉字或8个字母")
-
-                //修改li的宽度
-                if(liCount < 3){
-                    $("#menuList").children("li").each(function () {
-                        $(this).width((274 - (2 * (liCount + 1))) / (liCount + 1))
-                    });
-                    $(".sub_menuitem_container").width((274 - (2 * (liCount + 1))) / (liCount + 1))
-                }else {
-                    $("#menuList").children("li").each(function () {
-                        $(this).width((274 - (2 * (2 + 1))) / (2 + 1))
-                    });
-                    $(".sub_menuitem_container").width((274 - (2 * (2 + 1))) / (2 + 1))
-
-                    $('#firstliofpremenuItem').hide()
-                }
-            }
-        },
-
-        //删除菜单
+        //3.删除菜单
         deletemenuitemClick:function () {
 
             //弹框提示
@@ -285,60 +206,18 @@
             //点击了确认按钮
             myAlertWindow.conformBtnClick(function () {
 
-                //1.隐藏右边编辑框和发布按钮
+
+                $( ".pre_menu_item" ).each(function(index) {
+                    if ($(this).is($(".menu_item_active"))){
+                        var a = index
+                        appData.mainMenuList.splice(a,1);
+                        $(".menu_item_active").removeClass("menu_item_active")
+                        $(".subMenu_container_visible").removeClass("subMenu_container_visible")
+                    }
+                });
+
                 $(".portable_editor").css("visibility","hidden")
-                $(".saveAndPublishBtn").css("visibility","hidden")
-
-                //2.根据选中状态是否和选中样式是否一致来判断删除的是子菜单还是主菜单
-                //$(".activeState") 选中状态
-                //$(".menu_item_active") 选中样式
-                var activestate = $(".activeState")
-                var activestyle = $(".menu_item_active")
-
-                if(activestate.is(activestyle)){
-
-                    //3.移除选中状态(主菜单)
-                    $(".activeState").remove()
-
-                    //4.修改主菜单的样式
-                    var allLis = $("#menuList").children("li")
-                    liCount = allLis.length
-                    $('#firstliofpremenuItem').show()
-
-                    if(liCount < 3){
-                        $("#menuList").children("li").each(function () {
-                            $(this).width((274 - (2 * (liCount))) / (liCount))
-                        });
-                        $(".sub_menuitem_container").width((274 - (2 * (liCount))) / (liCount))
-                    }else {
-                        $("#menuList").children("li").each(function () {
-                            $(this).width((274 - (2 * (2 + 1))) / (2 + 1))
-                        });
-                        $(".sub_menuitem_container").width((274 - (2 * (2 + 1))) / (2 + 1))
-                    }
-
-                }else{
-
-                    //3.移除选中样式(子菜单)
-                    $(".menu_item_active").remove()
-
-                    //4.修改选中状态下子菜单的样式
-                    var allLis = $(".activeState").find(".sub_menuitem_container").find("ul").children("li")
-                    liCount = allLis.length - 1
-
-                    if(liCount == 0){
-                        $(".activeState").find(".sub_menuitem_container").css("top","-62px")
-                    }else if(liCount == 1){
-                        $(".activeState").find(".sub_menuitem_container").css("top","-114px")
-                    }else if (liCount == 2){
-                        $(".activeState").find(".sub_menuitem_container").css("top","-166px")
-                    }else if (liCount == 3){
-                        $(".activeState").find(".sub_menuitem_container").css("top","-218px")
-                    }else if (liCount == 4){
-                        $(".activeState").find(".sub_menuitem_container").css("top","-270px")
-                    }
-                }
-
+                deleteMenuChangeMenuWidth()
             })
         },
 
@@ -368,27 +247,201 @@
         el: "#app",
         data: appData,
         methods: {
-            addmenuitemClick:appFunc.addmenuitemClick,
+            addmenuitemOrSwitchMenuClick:appFunc.addmenuitemOrSwitchMenuClick,
+
             deletemenuitemClick:appFunc.deletemenuitemClick,
             selectMessageOrUrl:appFunc.selectMessageOrUrl,
             alertPickerContentPage:appFunc.alertPickerContentPage,
             saveAndPublishBtnClick:appFunc.saveAndPublishBtnClick,
-            addSubmenuitemClick:appFunc.addSubmenuitemClick,
         },
         mounted:function () {
-            getUserName()
+            getInitialData();
             addRightPortableEditorInputChange()
         }
     });
 
-    function getUserName() {
-//        $(".displayInterfaceTitle").append("AOLIU的每一天")
+    function getInitialData() {
         appData.userName = "AOLIU的每一天"
+        var menu = {
+           "menu": {
+               "button": [
+                   {
+                       "type": "click",
+                       "name": "今日歌曲",
+                       "key": "V1001_TODAY_MUSIC",
+                       "sub_button": [ ]
+                   },
+                   {
+                       "type": "click",
+                       "name": "歌手简介",
+                       "key": "V1001_TODAY_SINGER",
+                       "sub_button": [ ]
+                   },
+                   {
+                       "name": "菜单",
+                       "sub_button": [
+                           {
+                               "type": "view",
+                               "name": "搜索",
+                               "url": "http://www.soso.com/",
+                               "sub_button": [ ]
+                           },
+                           {
+                               "type": "view",
+                               "name": "视频",
+                               "url": "http://v.qq.com/",
+                               "sub_button": [ ]
+                           },
+                           {
+                               "type": "click",
+                               "name": "赞一下我们",
+                               "key": "V1001_GOOD",
+                               "sub_button": [ ]
+                           }
+                       ]
+                   }
+               ]
+           }
+       }
+        appData.mainMenuList = menu.menu.button;
+        initialMenu()
+    }
+
+    //初始化menu样式
+    function initialMenu() {
+        setTimeout(function () {
+            //计算当前主菜单有多少个li
+            //注意:
+            //1.只有1个li时,没有子菜单
+            //2.有2个li时,有1个子菜单,宽度是2个主菜单时主菜单的宽度
+            //3.有3个li时,有2个子菜单,宽度是3个主菜单时主菜单的宽度
+            //4.有4个li时,有3个子菜单,宽度是3个主菜单时主菜单的宽度
+
+            var listCount = $(".pre_menu_list").children("li").length
+            var itemTotalWidth = $('.pre_menu_list').width()
+            $(".pre_menu_list li:first").addClass("menu_item_active")
+            $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
+
+            $(".portable_editor").css("visibility","visible")
+
+            if (listCount < 4){
+                if (listCount == 1){
+                    $(".portable_editor").css("visibility","hidden")
+                    $(".perSub_menu_container").width(0)
+                }
+                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+
+            }else if (listCount >= 4){
+                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+            }
+
+            changeSubMenuPosition()
+
+        },0)
+    }
+
+    //调整子菜单的布局
+    function changeSubMenuPosition() {
+
+        var itemTotalWidth = $('.pre_menu_list').width()
+        var a =  $(".allSub_menuitem_container").children("li")
+
+        for (var i =0;i<a.length;i++){
+
+            $(a[i]).css("left",i * (itemTotalWidth/3)+"px")
+
+            var b = $(a[i]).find('ul');
+            var c = $(b).find("li");
+            var d = $(".sub_menu_list")[i];
+            $(d).height(c.length * 50);
+            for (var j =0;j<c.length;j++){
+                $(c[j]).css("bottom", (c.length - j - 1) * 50 + "px");
+            }
+        }
+
+    }
+    
+    //添加menu调整menu的宽度
+    function changeMenuWidth() {
+
+        setTimeout(function () {
+            //计算当前有多少个li
+            var listCount = $(".pre_menu_list").children("li").length
+            var itemTotalWidth = $('.pre_menu_list').width()
+
+            if (listCount < 4){
+                if(listCount == 1){
+                   $("#add_menu_item").addClass("menu_item_active")
+                }else {
+
+                    $("#add_menu_item").removeClass("menu_item_active")
+                    if(listCount == 2){
+                        $(".pre_menu_list li:eq(0)").addClass("menu_item_active")
+
+                        var p = $(".allSub_menuitem_container").children("li")[0]
+                        $(p).addClass("subMenu_container_visible")
+
+
+                    }else if (listCount == 3){
+                        $(".pre_menu_list li:eq(0)").removeClass("menu_item_active")
+                        $(".pre_menu_list li:eq(1)").addClass("menu_item_active")
+
+                        var q = $(".allSub_menuitem_container").children("li")[0]
+                        $(q).removeClass("subMenu_container_visible")
+                        var r = $(".allSub_menuitem_container").children("li")[1]
+                        $(r).addClass("subMenu_container_visible")
+
+                    }
+                }
+                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+            }else if (listCount >= 4){
+                if (listCount == 4){
+                    $(".pre_menu_list li:eq(1)").removeClass("menu_item_active")
+                    $(".pre_menu_list li:eq(2)").addClass("menu_item_active")
+
+                    var s = $(".allSub_menuitem_container").children("li")[1]
+                    $(s).removeClass("subMenu_container_visible")
+                    var t = $(".allSub_menuitem_container").children("li")[2]
+                    $(t).addClass("subMenu_container_visible")
+                }
+                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+            }
+
+            changeSubMenuPosition()
+        },0)
+    }
+
+    //删除menu调整menu的宽度
+    function deleteMenuChangeMenuWidth() {
+
+        setTimeout(function () {
+            //计算当前有多少个li
+            var listCount = $(".pre_menu_list").children("li").length
+            var itemTotalWidth = $('.pre_menu_list').width()
+
+            if (listCount < 4){
+                if(listCount == 1){
+                    $("#add_menu_item").addClass("menu_item_active")
+                    $(".perSub_menu_container").width(0)
+                }
+                $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+            }else if (listCount >= 4){
+                $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+                $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+            }
+
+            changeSubMenuPosition()
+
+        },0)
     }
 
     //监听右侧输入框文字的改变
     function addRightPortableEditorInputChange() {
-
 
         $('.commentInput').on('input propertychange', function() {
             var newmenuName = $(this).val();
@@ -398,10 +451,11 @@
             }else {
                 $(".menu_item_active").find(".js_addMenuTips").first().text(newmenuName)
             }
-
         });
 
     }
+    
+    
 
 </script>
 </body>

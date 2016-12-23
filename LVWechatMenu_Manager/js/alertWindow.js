@@ -30,9 +30,6 @@ function initModalAlertWindow(title,content) {
     $("#backdropDiv").bind("click",function () {
         $("#backdropDiv").fadeOut("slow")
     })
-    $("#cancleBtnClick").bind("click",function () {
-        $("#backdropDiv").fadeOut("slow")
-    })
 
     myAlertWindow.conformBtnClick = function(f){
         $("#conformBtn").bind("click",function () {
@@ -40,7 +37,12 @@ function initModalAlertWindow(title,content) {
             $("#backdropDiv").fadeOut("slow")
         })
     }
-
+    myAlertWindow.cancleBtnClick = function (f) {
+        $("#cancleBtnClick").bind("click",function () {
+            f()
+            $("#backdropDiv").fadeOut("slow")
+        })
+    }
 
 }
 
