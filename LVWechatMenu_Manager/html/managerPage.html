@@ -144,6 +144,26 @@
     </div>
 
 
+    <div id="backgroundDiv">
+        <div class="sourcePickerDiv">
+            <div class="sourcePickerHeader">选择素材</div>
+
+            <div class="sourcePickerLine"></div>
+
+            <div class="sourcePickerBody">
+                <select id="removePostSelect" name="removePost"></select>
+            </div>
+
+            <div class="sourcePickerLine"></div>
+
+            <div class="sourcePickerFooter">
+                <div class="sourcePickerConformBtn" @click="conformBtnClick">确认</div>
+                <div class="sourcePickerCancleBtn" @click="cancleBtnClick">取消</div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <script src="../third/jquery.min.js"></script>
@@ -266,6 +286,31 @@
         appData.muneDetailInfo = appData.mainMenuList[a].sub_button[ind]
     }
 
+    //6.资源选择点击了确定
+    function conformBtnClick() {
+//        alert($("#removePostSelect").find("option:selected").text())
+
+        var c = findCurrentMenu();
+
+        if (c[1] === 999){
+            if(appData.muneDetailInfo.key != ""){
+                appData.mainMenuList[c[0]].key = $("#removePostSelect").find("option:selected").text();
+            }
+        }else {
+            if(appData.muneDetailInfo.key != ""){
+                appData.mainMenuList[c[0]].sub_button[c[1]].key = $("#removePostSelect").find("option:selected").text();
+            }
+        }
+
+        $("#backgroundDiv").hide()
+    }
+    //7.资源选择点击了取消
+    function cancleBtnClick() {
+
+        $("#backgroundDiv").hide()
+    }
+
+
     var appFunc = {
 
         //3.删除菜单
@@ -322,7 +367,9 @@
 
         //选择图文消息
         alertPickerContentPage:function () {
-            alert("弹框")
+
+            $("#backgroundDiv").show()
+
         },
 
         //点击保存
@@ -361,7 +408,7 @@
                     appData.mainMenuList[c[0]].url = appData.muneDetailInfo.url;
                 }
             }else {
-                if(appData.muneDetailInfo.name != ""){
+                if(appData.muneDetailInfo.url != ""){
                     appData.mainMenuList[c[0]].sub_button[c[1]].url = appData.muneDetailInfo.url;
                 }
             }
@@ -410,9 +457,20 @@
         },
         mounted:function () {
             getInitialData();
-            addRightPortableEditorInputChange()
+            addRightPortableEditorInputChange();
+            getSelectedOption();
         }
     });
+
+    function getSelectedOption() {
+
+        $.get('../source/postItemClasses.json',function (data) {
+            $.each(data,function (index,currentClass) {
+                $("#removePostSelect").append('<option value=currentClass.value>'+currentClass.text+'</option>');
+            })
+        })
+    }
+
 
     function getInitialData() {
         appData.userName = "AOLIU的每一天"
