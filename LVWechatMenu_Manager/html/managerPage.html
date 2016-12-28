@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../css/managerPage.css">
 </head>
 
-<body >
+<body style="margin-top: -100px">
 
 <div class="pageContainer" id="app">
     <!--标题-->
@@ -19,56 +19,56 @@
         <div class="displayInterface">
             <div class="displayInterfaceTitle">{{userName}}</div>
 
-                <div class="displayInterfaceBg">
-                    <!--主菜单-->
-                    <ul class="pre_menu_list" >
+            <div class="displayInterfaceBg">
+                <!--主菜单-->
+                <ul class="pre_menu_list" >
 
-                        <li class="pre_menu_item" v-for="(d,index) in mainMenuList"  @click="changeFocusClick(index)">
-                            <a class="pre_menu_link">
-                                <span class="menu_item_detail">{{d.name}}</span>
-                            </a>
-                        </li>
-                        <li class="pre_menu_item" @click="addMenuItemLiClick" id="add_menu_item">
-                            <a class="pre_menu_link">
-                                <i class="icon14_menu_add"></i>
-                                <span class="menu_item_detail">添加菜单</span>
-                            </a>
-                        </li>
+                    <li class="pre_menu_item" v-for="(d,index) in mainMenuList"  @click="changeFocusClick(index)">
+                        <a class="pre_menu_link">
+                            <span class="menu_item_detail">{{d.name}}</span>
+                        </a>
+                    </li>
+                    <li class="pre_menu_item" @click="addMenuItemLiClick" id="add_menu_item">
+                        <a class="pre_menu_link">
+                            <i class="icon14_menu_add"></i>
+                            <span class="menu_item_detail">添加菜单</span>
+                        </a>
+                    </li>
 
+                </ul>
+
+                <!--子菜单-->
+                <!--
+                思路:
+                1.所有的子菜单都在一个allSub_menuitem_container的ul中
+                2.根据主菜单有几个来创建多少个perSub_menu_container,就是每个主菜单对应的子菜单容器,多个子菜单容器通过主菜单的切换来控制器隐藏还是现实
+                3.然后再根据每个主菜单对应子菜单数据的个数,决定子菜单的个数
+                4.添加子菜单,首先判断是在哪个主菜单的下,然后添加逻辑和主菜单一样
+                5.删除子菜单,同4
+                6.主菜单和子菜单直接的切换,通过去除之前的选中状态,给当前选中的添加选中状态来实现
+                -->
+
+                <div class="containerDiv">
+                    <ul class="allSub_menuitem_container">
+                        <li class="perSub_menu_container" v-for="(d,index) in mainMenuList" >
+                            <ul class="sub_menu_list">
+                                <li class="sub_menu_item" v-for="(c,index) in d.sub_button" @click="changeSubFocusClick(index)">
+                                    <a class="pre_subMenu_link">
+                                        <span class="menu_item_detail">{{c.name}}</span>
+                                    </a>
+                                </li>
+                                <li class="sub_menu_item" @click="addSubMenuItemClick" id="add_subMenu_btn">
+                                    <a class="pre_subMenu_link">
+                                        <i class="icon14_menu_add"></i>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
                     </ul>
-
-                    <!--子菜单-->
-                    <!--
-                    思路:
-                    1.所有的子菜单都在一个allSub_menuitem_container的ul中
-                    2.根据主菜单有几个来创建多少个perSub_menu_container,就是每个主菜单对应的子菜单容器,多个子菜单容器通过主菜单的切换来控制器隐藏还是现实
-                    3.然后再根据每个主菜单对应子菜单数据的个数,决定子菜单的个数
-                    4.添加子菜单,首先判断是在哪个主菜单的下,然后添加逻辑和主菜单一样
-                    5.删除子菜单,同4
-                    6.主菜单和子菜单直接的切换,通过去除之前的选中状态,给当前选中的添加选中状态来实现
-                    -->
-
-                    <div class="containerDiv">
-                        <ul class="allSub_menuitem_container">
-                            <li class="perSub_menu_container" v-for="(d,index) in mainMenuList" >
-                                <ul class="sub_menu_list">
-                                    <li class="sub_menu_item" v-for="(c,index) in d.sub_button" @click="changeSubFocusClick(index)">
-                                        <a class="pre_subMenu_link">
-                                            <span class="menu_item_detail">{{c.name}}</span>
-                                        </a>
-                                    </li>
-                                    <li class="sub_menu_item" @click="addSubMenuItemClick" id="add_subMenu_btn">
-                                        <a class="pre_subMenu_link">
-                                            <i class="icon14_menu_add"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-
-                            </li>
-                        </ul>
-                    </div>
-
                 </div>
+
+            </div>
         </div>
 
         <!--右边的界面-->
@@ -78,7 +78,6 @@
                 <span class="portable_header_left">菜单名称</span>
                 <span class="portable_header_right" @click="deletemenuitemClick">删除菜单</span>
             </div>
-
             <div class="muneNameDiv">
                 <label class="commentLabel">菜单名称</label>
                 <input type="text" class="commentInput" id="commentInput" value="" @change="muneNameChanged" v-model="muneDetailInfo.name">
@@ -86,15 +85,16 @@
                 <div class="muneTipDiv">子菜单字数不超过8个汉字或16个字母</div>
             </div>
 
+
             <!--中间-->
             <div class="muneContentDiv">
                 <label class="muneContentTitle">菜单内容</label>
                 <div class="start-radio">
-                    <input type="radio" value="1" class="radio" name="seletType" checked="true" @change="selectMessageOrUrl('message')">
+                    <input type="radio" value="1" class="radio radioFirst" name="selectType" checked="true" @change="selectMessageOrUrl('message')">
                     <div class="radioChose">发送消息</div>
                 </div>
                 <div class="close-radio">
-                    <input type="radio" value="0" class="radio" name="seletType" @change="selectMessageOrUrl('url')">
+                    <input type="radio" value="0" class="radio radioSecond" name="selectType" @change="selectMessageOrUrl('url')">
                     <div class="radioChose">跳转网页</div>
                 </div>
             </div>
@@ -108,15 +108,21 @@
                     <span class="concreteInnerMessageTitle">消息</span>
                 </div>
 
-                <!--1.2消息内容-->
+                <!--1.2素材内容-->
+                <div class="selectedPickerContentContiner">
+                    <div class="selectedPickerContentLabel">已选择的素材标题:</div>
+                    <div class="selectedPickerContentInner">{{muneDetailInfo.ArticleTitle}}</div>
+                    <div class="deletePickerContentBtn" @click="deletePickerContentBtnClick">删除</div>
+                </div>
+
                 <div class="concreteInnerMessageContent" @click="alertPickerContentPage">
                     <div>
                         <img src="../source/Snip20161212_9.png" class="PickerContentImage">
                     </div>
                     <a class="PickerContentButton">从素材库中选择</a>
                 </div>
-            </div>
 
+            </div>
 
             <!--2网页-->
             <div class="concreteInnerURLDiv" style="display: none">
@@ -125,7 +131,7 @@
                 <!--2.2连接-->
                 <div class="concreteInnerURLContent">
                     <label class="concreteInnerURLLabel">网页地址</label>
-                    <input type="text" class="concreteInnerURLInput" placeholder="请输入要跳转的地址" v-model="muneDetailInfo.url" @change="muneJumpUrlChanged">
+                    <input type="text" class="concreteInnerURLInput" placeholder="请输入要跳转的地址" v-model="muneDetailInfo.url" @blur="muneJumpUrlChanged(muneDetailInfo)">
                 </div>
             </div>
 
@@ -151,7 +157,9 @@
             <div class="sourcePickerLine"></div>
 
             <div class="sourcePickerBody">
-                <select id="removePostSelect" name="removePost"></select>
+                <select id="removePostSelect" name="removePost">
+                    <option value=d.key v-for="d in selectOptions">{{d.ArticleTitle}}</option>
+                </select>
             </div>
 
             <div class="sourcePickerLine"></div>
@@ -171,150 +179,20 @@
 <script src="../js/alertWindow.js"></script>
 <script>
 
-
     $(function () {
-
     });
 
     var appData = {
-        userName:"",
-        mainMenuList:[],
-        muneDetailInfo:{},//菜单名称
-        currentMenu:[],
+        userName:"",//用户名
+        mainMenuList:[],//菜单列表
+        muneDetailInfo:{},//当前菜单信息(主菜单或子菜单)
+        selectOptions:[],//可选择的
     };
-
-    //1.添加主菜单
-    function addMenuItemLiClick() {
-
-        var menu = {
-            "type": "click",
-            "name": "菜单名称",
-            "key": "V1001_TODAY_MUSIC",
-            "sub_button": [ ]
-        }
-
-        appData.mainMenuList.push(menu)
-        setTimeout(changeMenuWidth,0)
-
-        $(".portable_editor").css("visibility","visible")
-        $(".saveAndPublishBtn").css("visibility","visible")
-    }
-
-    //2.切换焦点
-    function changeFocusClick(index) {
-//        changeMenuWidth()
-        $(".portable_editor").css("visibility","visible")
-        $(".saveAndPublishBtn").css("visibility","visible")
-        $(".menu_item_active").removeClass("menu_item_active")
-        var a = $(".pre_menu_list").children("li")[index]
-        $(a).addClass("menu_item_active")
-        $(".perSub_menu_container").removeClass("subMenu_container_visible")
-        var b = $(".allSub_menuitem_container").children("li")[index]
-        $(b).addClass("subMenu_container_visible")
-
-        var c = findCurrentMenu()
-
-        appData.muneDetailInfo = appData.mainMenuList[c[0]]
-    }
-
-    //4.添加子菜单
-    function addSubMenuItemClick() {
-
-        $(".portable_editor").css("visibility","hidden")
-        $(".saveAndPublishBtn").css("visibility","hidden")
-        //1.找出当前是在第几个主菜单下
-        var a = findCurrentMenu()[0]
-
-        //2.在主菜单下的sub_button数组属性下添加数据
-        var subMenu = {
-            "type": "view",
-            "name": "子菜单名称",
-            "url": "",
-            "sub_button": []
-        }
-
-        if(appData.mainMenuList[a].sub_button.length >= 5){
-            alert("子菜单最多添加5个")
-        }else {
-            appData.mainMenuList[a].sub_button.push(subMenu)
-        }
-
-        //3.去除原来菜单的选中状态
-        $(".menu_item_active").removeClass("menu_item_active")
-
-        //4.添加新添加的子菜单的选中状态(暂时没做)
-
-        setTimeout(changeSubMenuPosition,0)
-//        setTimeout(changeSubMenuStyleFunc(a),0)
-
-    }
-    /*
-     function changeSubMenuStyleFunc(a) {
-        var b =  $(".allSub_menuitem_container").children("li")
-        var c = $(b[a]).find("ul")
-        var d = $(c).find("li")
-
-        var count = d.length;
-
-        if(count == 1){
-            $(".sub_menu_item:eq(1)").addClass("menu_item_active")
-        }else if(count == 2){
-            $(".sub_menu_item:eq(2)").addClass("menu_item_active")
-        }else if (count == 3){
-            $(".sub_menu_item:eq(3)").addClass("menu_item_active")
-        }else if(count == 4){
-            $(".sub_menu_item:eq(4)").addClass("menu_item_active")
-        }else if(count == 5){
-            $(".sub_menu_item:eq(5)").addClass("menu_item_active")
-        }
-    }
-*/
-    //5.切换焦点
-    function changeSubFocusClick(ind) {
-        $(".portable_editor").css("visibility","visible")
-        $(".saveAndPublishBtn").css("visibility","visible")
-        var a = findCurrentMenu()[0]
-
-        //2.所有的子菜单
-        var b =  $(".allSub_menuitem_container").children("li")
-
-        $(".menu_item_active").removeClass("menu_item_active")
-        var c = $(b[a]).find("ul")
-        var d = $(c).find("li")[ind]
-        $(d).addClass("menu_item_active")
-
-        appData.muneDetailInfo = appData.mainMenuList[a].sub_button[ind]
-    }
-
-    //6.资源选择点击了确定
-    function conformBtnClick() {
-//        alert($("#removePostSelect").find("option:selected").text())
-
-        var c = findCurrentMenu();
-
-        if (c[1] === 999){
-            if(appData.muneDetailInfo.key != ""){
-                appData.mainMenuList[c[0]].key = $("#removePostSelect").find("option:selected").text();
-            }
-        }else {
-            if(appData.muneDetailInfo.key != ""){
-                appData.mainMenuList[c[0]].sub_button[c[1]].key = $("#removePostSelect").find("option:selected").text();
-            }
-        }
-
-        $("#backgroundDiv").hide()
-    }
-    //7.资源选择点击了取消
-    function cancleBtnClick() {
-
-        $("#backgroundDiv").hide()
-    }
-
 
     var appFunc = {
 
-        //3.删除菜单
-        deletemenuitemClick:function () {
+        //4.删除菜单
+        deletemenuitemClick:function (){
 
             //弹框提示
             myAlertWindow.initial("温馨提示","删除后该菜单下设置的所有内容将被删除")
@@ -322,20 +200,31 @@
             //点击了确认按钮
             myAlertWindow.conformBtnClick(function () {
 
-                //一.如果是主菜单情况下
+                /*
+//                这里通过这种方法获取,因为删除的就是选中的,按道理是可以的,但是实际操作有问题bug待找
+                var c = findCurrentMenu()
+
+                if(c[1]===999){//主菜单
+                    appData.mainMenuList.splice(c[0],1)
+
+                    $(".subMenu_container_visible").removeClass("subMenu_container_visible")
+                }else {//子菜单
+                    appData.mainMenuList[c[0]].sub_button.splice((c[1]),1)
+                }
+                appData.muneDetailInfo = {}
+*/
+
+                // 主菜单情况下
                 $( ".pre_menu_item" ).each(function(index) {
                     if ($(this).is($(".menu_item_active"))){
                         var a = index
                         appData.mainMenuList.splice(a,1);
-                        $(".menu_item_active").removeClass("menu_item_active")
                         $(".subMenu_container_visible").removeClass("subMenu_container_visible")
                     }
                 });
 
-                //如果是子菜单情况下
-                //1.找出当前是在第几个主菜单下
+                // 子菜单情况下
                 var a = findCurrentMenu()[0]
-                //2.找出是第几个
                 var b =  $(".allSub_menuitem_container").children("li")
                 var c = $(b[a]).find("ul")
                 var d = $(c).find("li")
@@ -343,43 +232,18 @@
                 for(var i = 0; i < d.length; i++){
                     if ($(d[i]).is($(".menu_item_active"))){
                         appData.mainMenuList[a].sub_button.splice(i,1)
-                        $(".menu_item_active").removeClass("menu_item_active")
                     }
                 }
 
                 $(".portable_editor").css("visibility","hidden")
                 $(".saveAndPublishBtn").css("visibility","hidden")
-                setTimeout(deleteMenuChangeMenuWidth,0)
+                $(".menu_item_active").removeClass("menu_item_active")
 
+                setTimeout(deleteMenuChangeMenuWidth,0)
             })
         },
 
-        //切换发送消息还是跳转url
-        selectMessageOrUrl:function (e) {
-            if (e == "message"){
-                $(".concreteInnerMessageDiv").show()
-                $(".concreteInnerURLDiv").hide()
-            }else {
-                $(".concreteInnerMessageDiv").hide()
-                $(".concreteInnerURLDiv").show()
-            }
-        },
-
-        //选择图文消息
-        alertPickerContentPage:function () {
-
-            $("#backgroundDiv").show()
-
-        },
-
-        //点击保存
-        saveAndPublishBtnClick:function () {
-            alert("保存设置")
-            alert(appData.mainMenuList)
-            console.log(appData.mainMenuList)
-        },
-
-        //修改菜单名称
+        //7.修改菜单名称
         muneNameChanged:function () {
 
             var c = findCurrentMenu();
@@ -398,25 +262,242 @@
             }
         },
 
-        //修改调整的url
-        muneJumpUrlChanged:function () {
+        //8.切换发送素材还是跳转url
+        selectMessageOrUrl:function (e) {
+
+            var c = findCurrentMenu();
+            if (e == "message"){//素材(素材)
+
+                $(".concreteInnerMessageDiv").show()
+                $(".concreteInnerURLDiv").hide()
+                if (c[1] === 999){// 主菜单
+                    if (appData.mainMenuList[c[0]].ArticleTitle != ""){
+
+                        //展示界面
+                        $(".selectedPickerContentContiner").show()
+                        $(".concreteInnerMessageContent").hide()
+                    }else {
+
+                        //是选择界面
+                        $(".concreteInnerMessageContent").show()
+                        $(".selectedPickerContentContiner").hide()
+                    }
+                }else {//子菜单
+                    if (appData.mainMenuList[c[0]].sub_button[c[1]].ArticleTitle != ""){
+                        //展示界面
+                        $(".selectedPickerContentContiner").show()
+                        $(".concreteInnerMessageContent").hide()
+                    }else {
+
+                        //是选择界面
+                        $(".concreteInnerMessageContent").show()
+                        $(".selectedPickerContentContiner").hide()
+                    }
+                }
+
+            }else {//跳转url
+
+                $(".concreteInnerMessageDiv").hide()
+                $(".concreteInnerURLDiv").show()
+            }
+
+
+
+
+        },
+
+        //9.选择图文素材
+        alertPickerContentPage:function () {
+
+            $("#backgroundDiv").show()
+        },
+
+        //11.修改调整url
+        muneJumpUrlChanged:function (muneDetailInfo) {
+
+            if (muneDetailInfo.url == "") {
+                return;
+            }
 
             var c = findCurrentMenu();
 
             if (c[1] === 999){
-                if(appData.muneDetailInfo.url != ""){
-                    appData.mainMenuList[c[0]].url = appData.muneDetailInfo.url;
-                }
+                appData.mainMenuList[c[0]].type = "view"
+                appData.mainMenuList[c[0]].ArticleTitle = ""
+                appData.mainMenuList[c[0]].key = ""
+                appData.mainMenuList[c[0]].url = appData.muneDetailInfo.url;
+                appData.muneDetailInfo = appData.mainMenuList[c[0]]
             }else {
-                if(appData.muneDetailInfo.url != ""){
-                    appData.mainMenuList[c[0]].sub_button[c[1]].url = appData.muneDetailInfo.url;
-                }
+                appData.mainMenuList[c[0]].sub_button[c[1]].type = "view"
+                appData.mainMenuList[c[0]].sub_button[c[1]].ArticleTitle = ""
+                appData.mainMenuList[c[0]].sub_button[c[1]].key = ""
+                appData.mainMenuList[c[0]].sub_button[c[1]].url = appData.muneDetailInfo.url;
+                appData.muneDetailInfo = appData.mainMenuList[c[0]].sub_button[c[1]]
             }
-        }
+        },
+
+        //12.点击保存
+        saveAndPublishBtnClick:function () {
+            alert("保存设置")
+            alert(appData.mainMenuList)
+            console.log(appData.mainMenuList)
+        },
+
 
     };
 
-    //找到当前选中的是第几个菜单
+    var appVue = new Vue({
+        el: "#app",
+        data: appData,
+        methods: {
+            addmenuitemOrSwitchMenuClick:appFunc.addmenuitemOrSwitchMenuClick,
+
+            deletemenuitemClick:appFunc.deletemenuitemClick,
+            selectMessageOrUrl:appFunc.selectMessageOrUrl,
+            alertPickerContentPage:appFunc.alertPickerContentPage,
+            saveAndPublishBtnClick:appFunc.saveAndPublishBtnClick,
+
+            muneNameChanged:appFunc.muneNameChanged,
+            muneJumpUrlChanged:appFunc.muneJumpUrlChanged,
+        },
+        mounted:function () {
+            getInitialData();
+        }
+    });
+
+
+    //1.初始化数据
+    function getInitialData() {
+
+        //1.1获取用户基本信息
+        appData.userName = "AOLIU的每一天"
+
+        //1.2获取菜单信息
+        var menu = {
+            "menu": {
+                "button": [
+                    {
+                        "type": "click",
+                        "name": "今日歌曲",
+                        "key": "V1001_TODAY_MUSIC",
+                        "ArticleTitle":"今天的歌曲不错哦",
+                        "url": "",
+                        "sub_button": [ ]
+                    },
+                    {
+                        "type": "click",
+                        "name": "歌手简介",
+                        "key": "V1001_TODAY_SINGER",
+                        "ArticleTitle":"歌手是牛逼的歌手",
+                        "url": "",
+                        "sub_button": [ ]
+                    },
+                    {
+                        "type": "",
+                        "name": "菜单",
+                        "key": "",
+                        "ArticleTitle":"",
+                        "url": "",
+                        "sub_button": [
+                            {
+                                "type": "view",
+                                "name": "搜索",
+                                "key": "",
+                                "ArticleTitle":"",
+                                "url": "http://www.soso.com/",
+                                "sub_button": [ ]
+                            },
+                            {
+                                "type": "view",
+                                "name": "视频",
+                                "key": "",
+                                "ArticleTitle":"",
+                                "url": "http://v.qq.com/",
+                                "sub_button": [ ]
+                            },
+                            {
+                                "type": "click",
+                                "name": "赞一下我们",
+                                "key": "V1001_GOOD",
+                                "ArticleTitle":"谢谢点赞哦!",
+                                "url": "",
+                                "sub_button": [ ]
+                            },
+                        ]
+                    }
+                ]
+            }
+        }
+        appData.mainMenuList = menu.menu.button;
+
+        //1.3获取可选素材信息
+        appData.selectOptions = [
+            {"key":1,"ArticleTitle":"数码潮人"},
+            {"key":2,"ArticleTitle":"爱美包"},
+            {"key":3,"ArticleTitle":"辣妈萌宝"},
+            {"key":4,"ArticleTitle":"家居控"},
+        ]
+
+        //1.4调整界面样式,在实际dom渲染完后再调整样式
+        setTimeout(initialMenu,0)
+
+    }
+
+    //调整界面样式及赋值展示数据
+    function initialMenu() {
+
+        changeMainMenuAndEditorPosition()
+        changeSubMenuPosition()
+        resetPage()
+    }
+
+    //调整主菜单的布局及右边编辑器的显示状态
+    function changeMainMenuAndEditorPosition() {
+
+        var listCount = appData.mainMenuList.length + 1
+        var itemTotalWidth = 274
+
+        $(".pre_menu_list li:first").addClass("menu_item_active")
+        $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
+
+        if (listCount < 4){
+            if (listCount == 1){
+                $(".saveAndPublishBtn").css("visibility","hidden")
+                $(".perSub_menu_container").width(0)
+            }else {
+                $(".saveAndPublishBtn").css("visibility","visible")
+                $(".portable_editor").css("visibility","visible")
+            }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        }else if (listCount >= 4){
+            $(".saveAndPublishBtn").css("visibility","visible")
+            $(".portable_editor").css("visibility","visible")
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
+    }
+
+    //调整子菜单的布局
+    function changeSubMenuPosition() {
+
+        var itemTotalWidth = $('.pre_menu_list').width()
+        var a =  $(".allSub_menuitem_container").children("li")
+        for (var i =0;i<a.length;i++){
+
+            $(a[i]).css("left",i * (itemTotalWidth/3)+"px")
+            var b = $(a[i]).find('ul');
+            var c = $(b).find("li");
+            var d = $(".sub_menu_list")[i];
+            $(d).height(c.length * 50);
+
+            for (var j =0;j<c.length;j++){
+                $(c[j]).css("bottom", (c.length - j - 1) * 50 + "px");
+            }
+        }
+    }
+
+    //找到当前选中的是第几个菜单(主菜单,子菜单)
     function findCurrentMenu() {
         //1.找出当前自菜单是在第几个主菜单下
         var a = 0;
@@ -437,231 +518,293 @@
                 e = i;
             }
         }
-
         return [a,e]
     }
 
-    var appVue = new Vue({
-        el: "#app",
-        data: appData,
-        methods: {
-            addmenuitemOrSwitchMenuClick:appFunc.addmenuitemOrSwitchMenuClick,
+    //设置右侧编辑器里面的具体显示状态,及对要展示的内容赋值
+    function resetPage() {
 
-            deletemenuitemClick:appFunc.deletemenuitemClick,
-            selectMessageOrUrl:appFunc.selectMessageOrUrl,
-            alertPickerContentPage:appFunc.alertPickerContentPage,
-            saveAndPublishBtnClick:appFunc.saveAndPublishBtnClick,
+        var c = findCurrentMenu();
+        if (c[1] === 999){// 主菜单
 
-            muneNameChanged:appFunc.muneNameChanged,
-            muneJumpUrlChanged:appFunc.muneJumpUrlChanged,
-        },
-        mounted:function () {
-            getInitialData();
-            addRightPortableEditorInputChange();
-            getSelectedOption();
+            //如果主菜单没有子菜单
+            if(appData.mainMenuList[c[0]].sub_button.length == 0){
+
+                $(".muneContentDiv").show()
+
+                //根据type来控制显示连接界面还是素材界面
+                if(appData.mainMenuList[c[0]].type == "view"){
+
+                    //连接
+                    $(".concreteInnerMessageDiv").hide()
+                    $(".concreteInnerURLDiv").show()
+                    $("input:radio[name='selectType']").eq(1).click();
+
+                }else {
+
+                    //素材或者刚添加
+                    $(".concreteInnerMessageDiv").show()
+                    $(".concreteInnerURLDiv").hide()
+                    $("input:radio[name='selectType']").eq(0).click();
+                    if (appData.mainMenuList[c[0]].type == "click" && appData.mainMenuList[c[0]].ArticleTitle != ""){
+
+                        //展示界面
+                        $(".selectedPickerContentContiner").show()
+                        $(".concreteInnerMessageContent").hide()
+                    }else {
+
+                        //是选择界面
+                        $(".concreteInnerMessageContent").show()
+                        $(".selectedPickerContentContiner").hide()
+                    }
+                }
+            }else {
+
+                //如果主菜单有子菜单
+                $(".muneContentDiv").hide()
+                $(".concreteInnerMessageDiv").hide()
+                $(".concreteInnerURLDiv").hide()
+            }
+
+            //将要展示的数据取出来,赋值给muneDetailInfo
+          appData.muneDetailInfo = appData.mainMenuList[c[0]]
+        }else {//子菜单
+
+            $(".muneContentDiv").show()
+
+            //根据type来控制显示连接界面还是素材界面
+            if(appData.mainMenuList[c[0]].sub_button[c[1]].type == "view"){
+
+                //连接
+                $(".concreteInnerMessageDiv").hide()
+                $(".concreteInnerURLDiv").show()
+                $("input:radio[name='selectType']").eq(1).click();
+            }else {
+
+                //素材或者刚添加
+                $(".concreteInnerMessageDiv").show()
+                $(".concreteInnerURLDiv").hide()
+                $("input:radio[name='selectType']").eq(0).click();
+
+                //如果已经有了选择的素材那么显示
+                if(appData.mainMenuList[c[0]].sub_button[c[1]].type == "click" && appData.mainMenuList[c[0]].sub_button[c[1]].ArticleTitle != ""){
+
+                    $(".selectedPickerContentContiner").show()
+                    $(".concreteInnerMessageContent").hide()
+                }else {
+                    $(".concreteInnerMessageContent").show()
+                    $(".selectedPickerContentContiner").hide()
+                }
+            }
+
+            //将要展示的数据取出来,赋值给muneDetailInfo
+            appData.muneDetailInfo = appData.mainMenuList[c[0]].sub_button[c[1]]
         }
-    });
-
-    function getSelectedOption() {
-
-        $.get('../source/postItemClasses.json',function (data) {
-            $.each(data,function (index,currentClass) {
-                $("#removePostSelect").append('<option value=currentClass.value>'+currentClass.text+'</option>');
-            })
-        })
     }
 
+    //2.添加主菜单
+    function addMenuItemLiClick() {
 
-    function getInitialData() {
-        appData.userName = "AOLIU的每一天"
         var menu = {
-           "menu": {
-               "button": [
-                   {
-                       "type": "click",
-                       "name": "今日歌曲",
-                       "key": "V1001_TODAY_MUSIC",
-                       "sub_button": [ ]
-                   },
-                   {
-                       "type": "click",
-                       "name": "歌手简介",
-                       "key": "V1001_TODAY_SINGER",
-                       "sub_button": [ ]
-                   },
-                   {
-                       "name": "菜单",
-                       "sub_button": [
-                           {
-                               "type": "view",
-                               "name": "搜索",
-                               "url": "http://www.soso.com/",
-                               "sub_button": [ ]
-                           },
-                           {
-                               "type": "view",
-                               "name": "视频",
-                               "url": "http://v.qq.com/",
-                               "sub_button": [ ]
-                           },
-                           {
-                               "type": "click",
-                               "name": "赞一下我们",
-                               "key": "V1001_GOOD",
-                               "sub_button": [ ]
-                           },
-                       ]
-                   }
-               ]
-           }
-       }
-        appData.mainMenuList = menu.menu.button;
-
-        appData.muneDetailInfo = appData.mainMenuList[0]
-        setTimeout(initialMenu,0)
-
+            "type": "",
+            "name": "菜单名称",
+            "key": "",
+            "ArticleTitle":"",
+            "url": "",
+            "sub_button": [ ],
+        }
+        appData.mainMenuList.push(menu)
+        setTimeout(changeMenuStyle,0)
     }
 
-    //初始化menu样式
-    function initialMenu() {
-        //计算当前主菜单有多少个li
-        //注意:
-        //1.只有1个li时,没有子菜单
-        //2.有2个li时,有1个子菜单,宽度是2个主菜单时主菜单的宽度
-        //3.有3个li时,有2个子菜单,宽度是3个主菜单时主菜单的宽度
-        //4.有4个li时,有3个子菜单,宽度是3个主菜单时主菜单的宽度
+    //改变界面样式及赋值展示数据
+    function changeMenuStyle() {
+        changeMenuWidth()
+        changeSubMenuPosition()
+    }
 
-        var listCount = $(".pre_menu_list").children("li").length
-        var itemTotalWidth = $('.pre_menu_list').width()
-        $(".pre_menu_list li:first").addClass("menu_item_active")
-        $(".allSub_menuitem_container li:first").addClass("subMenu_container_visible")
+    //调整主菜单的宽度,并添加选中样式
+    function changeMenuWidth() {
+
+        //计算当前主菜单有多少个
+        var listCount = appData.mainMenuList.length + 1
+        var itemTotalWidth = 274
+
+        if (listCount < 4){
+
+            if(listCount == 2){
+                changeFocusClick(0)
+            }else if (listCount == 3){
+                changeFocusClick(1)
+            }
+            //然后根据主菜单的个数调整主菜单和子菜单容器的宽度
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        }else if (listCount >= 4){
+
+            if (listCount == 4){
+                changeFocusClick(2)
+            }
+            //然后根据主菜单的个数调整主菜单和子菜单容器的宽度
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
+    }
+
+    //3.切换主菜单焦点
+    function changeFocusClick(index) {
+
+        //这里不能通过这种方法获取当前活跃的来改变dom,因为切换时选中的还是上一个活跃的
+        //        var c = findCurrentMenu()
+
+        $(".saveAndPublishBtn").css("visibility","visible")
+        $(".portable_editor").css("visibility","visible")
+        $(".menu_item_active").removeClass("menu_item_active")
+
+        var a = $(".pre_menu_list").children("li")[index]
+        $(a).addClass("menu_item_active")
+        $(".perSub_menu_container").removeClass("subMenu_container_visible")
+        var b = $(".allSub_menuitem_container").children("li")[index]
+        $(b).addClass("subMenu_container_visible")
+
+        resetPage()
+    }
+
+    //4.删除菜单(主,子)实际方法在appFunc中4,这里是调整删除后菜单宽度及样式
+    function deleteMenuChangeMenuWidth() {
+        //计算当前有多少个li
+        var listCount = appData.mainMenuList.length + 1
+        var itemTotalWidth = 274
+
+        if (listCount < 4){
+            if(listCount == 1){
+                $("#add_menu_item").addClass("menu_item_active")
+                $(".perSub_menu_container").width(0)
+            }
+            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        }else if (listCount >= 4){
+            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
+            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        }
+        changeSubMenuPosition()
+    }
+
+    //5.添加子菜单
+    function addSubMenuItemClick() {
+
+        $(".portable_editor").css("visibility","hidden")
+        $(".saveAndPublishBtn").css("visibility","hidden")
+        //1.找出当前是在第几个主菜单下
+        var a = findCurrentMenu()[0]
+
+        //2.去除之前的主菜单的属性
+        appData.mainMenuList[a].type = ""
+        appData.mainMenuList[a].ArticleTitle = ""
+        appData.mainMenuList[a].key = ""
+        appData.mainMenuList[a].url = ""
+
+        //3.在主菜单下的sub_button数组属性下添加数据
+        var subMenu = {
+            "type": "",
+            "name": "子菜单名称",
+            "key": "",
+            "ArticleTitle":"",
+            "url": "",
+            "sub_button": [ ],
+        }
+
+        if(appData.mainMenuList[a].sub_button.length >= 5){
+            alert("子菜单最多添加5个")
+        }else {
+            appData.mainMenuList[a].sub_button.push(subMenu)
+        }
+
+        //4.去除原来菜单的选中状态
+        $(".menu_item_active").removeClass("menu_item_active")
+
+        //5.调整子菜单样式
+        setTimeout(changeSubMenuPosition,0)
+    }
+
+    //6.切换子菜单焦点
+    function changeSubFocusClick(ind) {
 
         $(".portable_editor").css("visibility","visible")
         $(".saveAndPublishBtn").css("visibility","visible")
 
-        if (listCount < 4){
-            if (listCount == 1){
-                $(".portable_editor").css("visibility","hidden")
-                $(".saveAndPublishBtn").css("visibility","hidden")
-                $(".perSub_menu_container").width(0)
-            }
-            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
+        var a = findCurrentMenu()[0]
 
-        }else if (listCount >= 4){
-            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
+        //2.所有的子菜单
+        var b =  $(".allSub_menuitem_container").children("li")
+
+        $(".menu_item_active").removeClass("menu_item_active")
+        var c = $(b[a]).find("ul")
+        var d = $(c).find("li")[ind]
+        $(d).addClass("menu_item_active")
+
+        resetPage()
+    }
+
+    //7.修改菜单名称,实际方法在appFunc中7
+
+    //8.切换发送素材还是跳转url,实际方法在appFunc中8
+
+    //9.选择图文素材,实际方法在appFunc中9,这里是选择完毕后调用方法和点击了取消的方法
+
+    //9.1资源选择点击了确认
+    function conformBtnClick() {
+
+        $(".concreteInnerMessageContent").hide()
+        $(".selectedPickerContentContiner").show()
+
+        var c = findCurrentMenu();
+
+        if (c[1] === 999){
+
+            //这里目前少一个key的赋值,根据ArticleTitle去修改key值,因为最后上传到服务器的是key来决定是哪个资源
+            appData.mainMenuList[c[0]].type = "click"
+            appData.mainMenuList[c[0]].ArticleTitle = $("#removePostSelect").find("option:selected").text();
+            appData.mainMenuList[c[0]].url = ""
+            appData.muneDetailInfo = appData.mainMenuList[c[0]]
+        }else {
+
+            //这里目前少一个key的赋值,根据ArticleTitle去修改key值,因为最后上传到服务器的是key来决定是哪个资源
+            appData.mainMenuList[c[0]].sub_button[c[1]].type = "click"
+            appData.mainMenuList[c[0]].sub_button[c[1]].ArticleTitle = $("#removePostSelect").find("option:selected").text();
+            appData.mainMenuList[c[0]].sub_button[c[1]].url = ""
+            appData.muneDetailInfo = appData.mainMenuList[c[0]].sub_button[c[1]]
         }
-        changeSubMenuPosition()
+        $("#backgroundDiv").hide()
     }
 
-    //调整子菜单的布局
-    function changeSubMenuPosition() {
+    //9.2.资源选择点击了取消
+    function cancleBtnClick() {
 
-        var itemTotalWidth = $('.pre_menu_list').width()
-        var a =  $(".allSub_menuitem_container").children("li")
+        $("#backgroundDiv").hide()
+    }
 
-        for (var i =0;i<a.length;i++){
+    //10.资源选择了删除
+    function deletePickerContentBtnClick() {
 
-            $(a[i]).css("left",i * (itemTotalWidth/3)+"px")
-
-            var b = $(a[i]).find('ul');
-            var c = $(b).find("li");
-            var d = $(".sub_menu_list")[i];
-            $(d).height(c.length * 50);
-
-            for (var j =0;j<c.length;j++){
-                $(c[j]).css("bottom", (c.length - j - 1) * 50 + "px");
-            }
+        var c = findCurrentMenu();
+        if (c[1] === 999){
+            appData.mainMenuList[c[0]].type = ""
+            appData.mainMenuList[c[0]].ArticleTitle = ""
+            appData.mainMenuList[c[0]].key = ""
+            appData.muneDetailInfo = appData.mainMenuList[c[0]]
+        }else {
+            appData.mainMenuList[c[0]].sub_button[c[1]].type = ""
+            appData.mainMenuList[c[0]].sub_button[c[1]].ArticleTitle = ""
+            appData.mainMenuList[c[0]].sub_button[c[1]].key = ""
+            appData.muneDetailInfo = appData.mainMenuList[c[0]].sub_button[c[1]]
         }
+        resetPage()
     }
 
-    //添加menu调整menu的宽度
-    function changeMenuWidth() {
-        //计算当前有多少个li
-        var listCount = $(".pre_menu_list").children("li").length
-        var itemTotalWidth = $('.pre_menu_list').width()
+    //11.修改调整url,实际方法在appFunc中11
 
-        if (listCount < 4){
-            if(listCount == 1){
-                $("#add_menu_item").addClass("menu_item_active")
-            }else {
-
-                $("#add_menu_item").removeClass("menu_item_active")
-                if(listCount == 2){
-                    $(".pre_menu_list li:eq(0)").addClass("menu_item_active")
-
-                    var p = $(".allSub_menuitem_container").children("li")[0]
-                    $(p).addClass("subMenu_container_visible")
-
-
-                }else if (listCount == 3){
-                    $(".pre_menu_list li:eq(0)").removeClass("menu_item_active")
-                    $(".pre_menu_list li:eq(1)").addClass("menu_item_active")
-
-                    var q = $(".allSub_menuitem_container").children("li")[0]
-                    $(q).removeClass("subMenu_container_visible")
-                    var r = $(".allSub_menuitem_container").children("li")[1]
-                    $(r).addClass("subMenu_container_visible")
-
-                }
-            }
-            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
-        }else if (listCount >= 4){
-            if (listCount == 4){
-                $(".pre_menu_list li:eq(1)").removeClass("menu_item_active")
-                $(".pre_menu_list li:eq(2)").addClass("menu_item_active")
-
-                var s = $(".allSub_menuitem_container").children("li")[1]
-                $(s).removeClass("subMenu_container_visible")
-                var t = $(".allSub_menuitem_container").children("li")[2]
-                $(t).addClass("subMenu_container_visible")
-            }
-            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
-        }
-
-        changeSubMenuPosition()
-    }
-
-    //删除menu调整menu的宽度
-    function deleteMenuChangeMenuWidth() {
-        //计算当前有多少个li
-        var listCount = $(".pre_menu_list").children("li").length
-        var itemTotalWidth = $('.pre_menu_list').width()
-
-        if (listCount < 4){
-            if(listCount == 1){
-                $("#add_menu_item").addClass("menu_item_active")
-                $(".perSub_menu_container").width(0)
-            }
-            $(".pre_menu_item").width((itemTotalWidth - (2 * listCount)) / listCount)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * listCount)) / listCount)
-        }else if (listCount >= 4){
-            $(".pre_menu_item").width((itemTotalWidth - (2 * 3)) / 3)
-            $(".perSub_menu_container").width((itemTotalWidth - (2 * 3)) / 3)
-        }
-
-        changeSubMenuPosition()
-
-    }
-
-    //监听右侧输入框文字的改变
-    function addRightPortableEditorInputChange() {
-
-        $('.commentInput').on('input propertychange', function() {
-            var newmenuName = $(this).val();
-
-            if (newmenuName.length == 0){
-                $(".menu_item_active").find(".js_addMenuTips").first().text("")
-            }else {
-                $(".menu_item_active").find(".js_addMenuTips").first().text(newmenuName)
-            }
-        });
-
-    }
-
+    //12.点击保存,实际方法在appFunc中12
 
 </script>
 </body>

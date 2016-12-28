@@ -1,11 +1,11 @@
 [
-  {"value":1,"text":"数码潮人"},
-  {"value":2,"text":"爱美包"},
-  {"value":3,"text":"辣妈萌宝"},
-  {"value":4,"text":"家居控"},
-  {"value":5,"text":"魅力运动"},
-  {"value":6,"text":"手作达人"},
-  {"value":7,"text":"文具控"},
-  {"value":8,"text":"收藏家"},
-  {"value":9,"text":"彩妆汇"}
+  {"key":1,"ArticleTitle":"数码潮人"},
+  {"key":2,"ArticleTitle":"爱美包"},
+  {"key":3,"ArticleTitle":"辣妈萌宝"},
+  {"key":4,"ArticleTitle":"家居控"},
+  {"key":5,"ArticleTitle":"魅力运动"},
+  {"key":6,"ArticleTitle":"手作达人"},
+  {"key":7,"ArticleTitle":"文具控"},
+  {"key":8,"ArticleTitle":"收藏家"},
+  {"key":9,"ArticleTitle":"彩妆汇"}
 ]
