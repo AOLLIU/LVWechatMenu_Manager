@@ -28,6 +28,27 @@
   height: 49px;
   display: block;
   bottom: 0px;
+  overflow: hidden;
+}
+.pre_menu_item {
+  border: 1px solid gainsboro;
+  color: black;
+  position: relative;
+  text-align: center;
+  float: left;
+  height: 48px;
+  line-height: 48px;
+}
+.pre_menu_link {
+  display: block;
+  width: auto;
+  height: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  color: #616161;
+  text-decoration: none;
 }
 .sub_menu_list {
   position: relative;
