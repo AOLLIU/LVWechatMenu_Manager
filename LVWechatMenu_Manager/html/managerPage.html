@@ -340,8 +340,62 @@
         //12.点击保存
         saveAndPublishBtnClick:function () {
             alert("保存设置")
-            alert(appData.mainMenuList)
-            console.log(appData.mainMenuList)
+
+            //发送服务器前数据处理
+            var beforeSendData = appData.mainMenuList
+
+            for (i in beforeSendData) {
+                if(beforeSendData[i].sub_button.length <= 0){//主菜单
+                    var name = beforeSendData[i].name
+                    var type = beforeSendData[i].type
+//                    var key = beforeSendData[i].key
+//                    var ArticleTitle = beforeSendData[i].ArticleTitle
+//                    var url = beforeSendData[i].url
+                    if(name == ""){
+                        alert("主菜单名字不能为空")
+                    }else {
+                        if(type == ""){
+                            alert(name + "主菜单没有选择菜单内容")
+                        }
+                    }
+                }else {
+                    for(j in beforeSendData[i].sub_button){
+                        var name = beforeSendData[i].sub_button[j].name
+                        var type = beforeSendData[i].sub_button[j].type
+//                        var key = beforeSendData[i].sub_button[j].key
+//                        var ArticleTitle = beforeSendData[i].sub_button[j].ArticleTitle
+//                        var url = beforeSendData[i].sub_button[j].url
+                        if(name == ""){
+                            alert("子菜单名字不能为空")
+                        }else {
+                            if (type == "") {
+                                alert(name + "子菜单没有选择菜单内容")
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            var menu = {"button":appData.mainMenuList}
+      /*      $.ajax({
+             url : "",
+             data : {
+                menu: menu
+             },
+             type : "GET",
+             success : function(data) {
+             if (data.errcode == "0") {
+
+             } else if (data.errcode == "403") {
+                 alert("获取失败");
+             } else {
+                 alert(data.errmsg);
+             }
+             }
+             });
+*/
+            console.log(menu)
         },
 
 
@@ -366,12 +420,27 @@
         }
     });
 
-
     //1.初始化数据
     function getInitialData() {
 
         //1.1获取用户基本信息
         appData.userName = "AOLIU的每一天"
+        /*$.ajax({
+            url : "",
+            data : {
+            },
+            type : "GET",
+            success : function(data) {
+                if (data.errcode == "0") {
+
+                } else if (data.errcode == "403") {
+                    alert("获取失败");
+                } else {
+                    alert(data.errmsg);
+                }
+            }
+        });
+*/
 
         //1.2获取菜单信息
         var menu = {
@@ -430,6 +499,23 @@
             }
         }
         appData.mainMenuList = menu.menu.button;
+        /*$.ajax({
+         url : "",
+         data : {
+         },
+         type : "GET",
+         success : function(data) {
+         if (data.errcode == "0") {
+
+         } else if (data.errcode == "403") {
+         alert("获取失败");
+         } else {
+         alert(data.errmsg);
+         }
+         }
+         });
+         */
+
 
         //1.3获取可选素材信息
         appData.selectOptions = [
@@ -438,6 +524,22 @@
             {"key":3,"ArticleTitle":"辣妈萌宝"},
             {"key":4,"ArticleTitle":"家居控"},
         ]
+        /*$.ajax({
+         url : "",
+         data : {
+         },
+         type : "GET",
+         success : function(data) {
+         if (data.errcode == "0") {
+
+         } else if (data.errcode == "403") {
+         alert("获取失败");
+         } else {
+         alert(data.errmsg);
+         }
+         }
+         });
+         */
 
         //1.4调整界面样式,在实际dom渲染完后再调整样式
         setTimeout(initialMenu,0)
